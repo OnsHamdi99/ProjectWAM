@@ -76,4 +76,16 @@ function postPlugin (req, res) {
 
 } 
 
-module.exports = { getPlugins, getPlugin };
+function deletePlugin(req, res) {
+
+  Plugin.findByIdAndRemove(req.params.id, (err, plugin) => {
+      if (err) {
+          res.send(err);
+      }
+      res.json({message: `${pluginname.nom} deleted`});
+  })
+}
+
+
+
+module.exports = { getPlugins, getPlugin, deletePlugin };
