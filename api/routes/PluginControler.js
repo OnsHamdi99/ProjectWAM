@@ -86,6 +86,18 @@ function deletePlugin(req, res) {
   })
 }
 
-
+function updatePlugin(req,res){ 
+  console.log("Update on plugin : ");
+  console.log(req.body) ;
+  Pluggin.findByIdAndUpdate(res.body._id, req.body, {new :true}, (err, plugin) => {
+    if (err) {
+      console.log(err);
+      res.send(err); 
+    }
+    else {
+      res.json({message : "${plugin.name} updated"});
+    }
+  })
+}
 
 module.exports = { getPlugins, getPlugin, deletePlugin };
