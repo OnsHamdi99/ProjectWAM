@@ -50,6 +50,7 @@ function postPlugin (req, res) {
   let plugin = new Plugin() ; 
   plugin.id = req.body.id ; 
   plugin.identifier = req.body.identifier;
+  plugin.name = req.body.name;
   plugin.vendor = req.body.vendor; 
   plugin.description = req.body.description; 
   plugin.version = req.body.version;
@@ -62,7 +63,17 @@ function postPlugin (req, res) {
   plugin.hasAudioOutput = req.body.hasAudioOutput;
   plugin.hasMidiInput = req.body.hasMidiInput; 
   plugin.hasMidiOutput = res.body.hasMidiOutput; 
+   
+  console.log="Post Plugin received : "
+  console.log(plugin) ;
+
+  plugin.save((err)=> {
+    if(err){
+      res.send("Can't post plugin : ", err)
+    }
+    res.json ({message : "${plugin.name} saved! "})
+  })
 
 } 
 
-module.exports = { getPlugins };
+module.exports = { getPlugins, getPlugin };

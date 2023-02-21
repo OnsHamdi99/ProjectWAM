@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var PluginSchema = new mongoose.Schema({  
   id: Number,
   identifier: String,
+  name : String,
   vendor: String,
   description: String,
   version: String,
