@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-let plugins = require('./routes/plugins');
+let plugins = require('./routes/PluginControler');
 /*
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
