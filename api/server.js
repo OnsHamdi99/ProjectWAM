@@ -7,9 +7,7 @@ let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
-// remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud s
-const uri = 'mongodb+srv://ons:ons@cluster0.okglpv3.mongodb.net/?retryWrites=true&w=majority';
-//const uri ="mongodb+srv://onshamdi:mdp@cluster0.v7t1onk.mongodb.net/?retryWrites=true&w=majority";
+const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/?retryWrites=true&w=majority';
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
