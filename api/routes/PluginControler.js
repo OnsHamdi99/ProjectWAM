@@ -59,6 +59,8 @@ function postPlugin (req, res) {
   plugin.isInstrument = req.body.isInstrument; 
   plugin.website = req.body.website; 
   plugin.hasAudioInput = req.body.hasAudioInput
-}
+  plugin.hasAudioOutput = req.body.has
+
+} 
 
 module.exports = { getPlugins };
