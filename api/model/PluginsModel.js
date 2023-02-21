@@ -11,8 +11,8 @@ var PluginSchema = new mongoose.Schema({
   isInstrument : Boolean, 
   website : String ,
   hasAudioInput : Boolean, 
-  hadAudioOutput : Boolean,
-  hadMiniInput : Boolean, 
+  hasAudioOutput : Boolean,
+  hasMiniInput : Boolean, 
   hasMidiOutput : Boolean,
 
 });

@@ -2,7 +2,7 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let plugins = require('./routes/PluginControler');
-/*
+
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
@@ -25,7 +25,7 @@ mongoose.connect(uri, options)
     err => {
       console.log('Erreur de connexion: ', err);
     });
-*/
+
 // Pour accepter les connexions cross-domain (CORS)
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
