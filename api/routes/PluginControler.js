@@ -58,8 +58,10 @@ function postPlugin (req, res) {
   plugin.keywords = req.body.keywords; 
   plugin.isInstrument = req.body.isInstrument; 
   plugin.website = req.body.website; 
-  plugin.hasAudioInput = req.body.hasAudioInput
-  plugin.hasAudioOutput = req.body.has
+  plugin.hasAudioInput = req.body.hasAudioInput;
+  plugin.hasAudioOutput = req.body.hasAudioOutput;
+  plugin.hasMidiInput = req.body.hasMidiInput; 
+  plugin.hasMidiOutput = res.body.hasMidiOutput; 
 
 } 
 
