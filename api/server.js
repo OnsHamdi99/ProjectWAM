@@ -43,7 +43,9 @@ const prefix = '/api';
 
 
 app.route(prefix + '/plugins')
-  .get(plugins.getPlugins);
+  .get(plugins.getPlugins)
+ // .post(plugins.postPlugin)
+  //.put(plugins.updatePlugin);
 
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
