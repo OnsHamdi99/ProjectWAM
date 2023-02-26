@@ -100,4 +100,4 @@ function updatePlugin(req,res){
   })
 }
 
-module.exports = { getPlugins, getPlugin, deletePlugin };
+module.exports = { getPlugins, getPlugin, deletePlugin, updatePlugin, postPlugin };

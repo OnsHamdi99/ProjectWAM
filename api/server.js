@@ -44,7 +44,7 @@ const prefix = '/api';
 
 app.route(prefix + '/plugins')
   .get(plugins.getPlugins)
- // .post(plugins.postPlugin)
+ .post(plugins.postPlugin)
   //.put(plugins.updatePlugin);
 
 // On démarre le serveur
