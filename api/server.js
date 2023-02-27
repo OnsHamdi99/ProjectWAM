@@ -16,7 +16,7 @@ const options = {
 
 mongoose.connect(uri, options)
   .then(() => {
-    console.log("Connecté à la base MongoDB assignments dans le cloud !");
+    console.log("Connecté à la base MongoDB WAM dans le cloud !");
     console.log("at URI = " + uri);
     console.log("vérifiez with http://localhost:8010/api/plugins que cela fonctionne")
     },
@@ -44,24 +44,26 @@ const prefix = '/api';
 
 app.route(prefix + '/plugins')
   .get(plugins.getPlugins)
- .post(plugins.postPlugin)
-  //.put(plugins.updatePlugin);
+  .post(plugins.postPlugin)
+  .put(plugins.updatePlugin);
 
-// On démarre le serveur
-app.listen(port, "0.0.0.0");
-console.log('Serveur démarré sur http://localhost:' + port);
-///////////////////
-//début modifs
+app.route(prefix + '/plugins/put-in-db')
+  .put(plugins.putPluginsInDB);
 
-/*
+////////// User 
 global.__root   = __dirname + '/'; 
-var UserController = require(__root + 'user/UserController');
-app.use('/api/users', UserController);
+var UserController = require(__root + 'routes/UserController');
+app.use('/api/routes', UserController);
 
 var AuthController = require(__root + 'auth/AuthController');
 app.use('/api/auth', AuthController);
-*/
+///////////// end
 
-/////
+app.listen(port, "0.0.0.0");
+console.log('Serveur démarré sur http://localhost:' + port);
+
+
+
+
 module.exports = app;
 

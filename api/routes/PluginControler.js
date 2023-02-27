@@ -75,7 +75,21 @@ function postPlugin (req, res) {
   })
 
 } 
+/*
+function postPlugin(plugin) {
+  let newPlugin = new Plugin(plugin);
 
+  return new Promise((resolve, reject) => {
+    newPlugin.save((err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(newPlugin);
+      }
+    });
+  });
+}
+*/
 function deletePlugin(req, res) {
 
   Plugin.findByIdAndRemove(req.params.id, (err, plugin) => {
@@ -100,4 +114,20 @@ function updatePlugin(req,res){
   })
 }
 
-module.exports = { getPlugins, getPlugin, deletePlugin, updatePlugin, postPlugin };
+function putPluginsInDB (req,res){
+  console.log("here");
+  const plugins =  getPlugins(); 
+  plugins.forEach((pluginData) => {
+    const existingPlugin =  Plugin.findOne({ identifier: plugin.identifier });
+    if (existingPlugin) {
+      console.log(`Plugin with name ${plugin.identifier} already exists in the database`);
+    } else {
+     postPlugin({body : pluginData }, {  send: (msg) => console.log(msg),
+      json: (data) => console.log(data),});
+  }
+}
+  )
+console.log('All plugins saved to the database');
+}
+
+module.exports = {putPluginsInDB, getPlugins, getPlugin, deletePlugin, updatePlugin, postPlugin };
