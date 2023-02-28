@@ -7,7 +7,7 @@ let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
-const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/WAM?retryWrites=true&w=majority';
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -38,6 +38,14 @@ app.use(bodyParser.json());
 
 let port = process.env.PORT || 8010;
 
+// Pour les fichiers statiques (html, css, etc.)
+app.use(express.static('plugins')); // ICI IMPORTANT !
+// Avec la règle ci-dessous on peut redéfinir la page d’accueil
+app.get('/', (req, res) => { // Page d’accueil
+  res.sendFile(__dirname + "/plugins/index.html");
+});
+
+
 // les routes
 const prefix = '/api';
 
@@ -47,8 +55,8 @@ app.route(prefix + '/plugins')
   .post(plugins.postPlugin)
   .put(plugins.updatePlugin);
 
-app.route(prefix + '/plugins/put-in-db')
-  .put(plugins.putPluginsInDB);
+app.route(prefix + '/buildDB')
+  .get(plugins.putPluginsInDB);
 
 ////////// User 
 global.__root   = __dirname + '/'; 

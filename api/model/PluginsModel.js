@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');  
 var PluginSchema = new mongoose.Schema({  
   id: Number,
+  dirName: String,
   identifier: String,
   name : String,
   vendor: String,
@@ -17,6 +18,6 @@ var PluginSchema = new mongoose.Schema({
   hasMidiOutput : Boolean,
 
 });
-mongoose.model('Plugin', PluginSchema);
 
-module.exports = mongoose.model('Plugin');
+
+module.exports = mongoose.model('Plugin', PluginSchema);
