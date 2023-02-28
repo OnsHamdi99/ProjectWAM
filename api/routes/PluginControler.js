@@ -9,19 +9,16 @@ let pluginsBaseDir = "/plugins";
 let pluginsDir = currentDir + pluginsBaseDir;
 
 let pluginsDirURL = "https://localhost:8080/…";
+/**  cette fonction lit le dossier des plugins (pour le moment codé en dur), et renvoie la liste des descripteurs sous la forme d'un
+tableau appelé plugins */
 
-/**
- *  cette fonction lit le dossier des plugins (pour le moment codé en dur), et renvoie la liste des descripteurs sous la forme d'un
- * tableau appelé plugins 
- * 
- * @param {*} dir direction of the plugins/ directory
- * @param {*} vendor vendor name / owner of the plugins
- * @returns  an array of plugin descriptors
- */
 function readPluginsFromDisk(dir, vendor) {
+  console.log("getPlugins");
 
   let plugins = [];
   
+
+  //files = fs.readdirSync();
   console.log("Building Repositiry.json...Reading " + pluginsDir + "...");
 
   fs.readdirSync(dir).forEach((name) => {
@@ -43,6 +40,7 @@ function readPluginsFromDisk(dir, vendor) {
         // add the directory name to the descriptor
         descriptor.dirName = vendor + "/" + name;
 
+        console.log(descriptor)
 
         plugins.push(descriptor);
       }
@@ -51,15 +49,11 @@ function readPluginsFromDisk(dir, vendor) {
   return plugins;
 }
 
-/**
- * Function to get the list of plugins from the database
- * @param {*} req  
- * @param {*} res 
- */
+
 async function getPlugins(req, res) {
   let repository = {
     name: "WAP Repo from Faust IDE",
-    description: "Main WAM server. In order to display a runnable plugin, add to the base URL of the server / followed by the dirName property of each plugin.",
+    root: pluginsBaseDir,
     plugins: [],
   };
   Plugin.find((err, plugins) => {
@@ -69,14 +63,13 @@ async function getPlugins(req, res) {
       repository.plugins = plugins;
       res.json(repository);
     }
+
+   
 });
 
+// res.json(repository);
 }
-/**
- * Get a plugin from the database by its id
- * @param {*} req 
- * @param {*} res 
- */
+
 function getPlugin(req, res) {
   let pluginID = req.params.id;
   Plugin.findOne({ id: pluginID }, (err, plugin) => {
@@ -86,11 +79,6 @@ function getPlugin(req, res) {
     res.json(plugin);
   });
 }
-
-/**
- * Function to save a plugin to the database
- * @param {*} p a plugin descriptor
- */
 function savePluginToDB(p) {
   let plugin = new Plugin();
   plugin.id = p.id;
@@ -109,22 +97,17 @@ function savePluginToDB(p) {
   plugin.hasMidiInput = p.hasMidiInput;
   plugin.hasMidiOutput = p.hasMidiOutput;
   plugin.dirName = p.dirName;
-  console.log(" Plugin to save received ");
-
+  console.log(p.dirName);
+  console.log(" Plugin to save received : ");
+  //console.log(plugin);
 
   plugin.save((err) => {
     if (err) {
       console.log("Can't post plugin : ", err);
     }
-    console.log(p.name + " saved! ");
+    console.log("${plugin.name} saved! ");
   });
 }
-
-/**
- * Function to post a plugin to the database
- * @param {*} req 
- * @param {*} res 
- */
 function postPlugin(req, res) {
   let plugin = new Plugin();
   plugin.id = req.body.id;
@@ -144,19 +127,30 @@ function postPlugin(req, res) {
   plugin.hasMidiOutput = res.body.hasMidiOutput;
 
   console.log = "Post Plugin received : ";
+  console.log(plugin);
 
   plugin.save((err) => {
     if (err) {
       res.send("Can't post plugin : ", err);
     }
-    res.json({ message: "${p.name} saved! " });
+    res.json({ message: "${plugin.name} saved! " });
   });
 }
-/**
- * Function to delete a plugin from the database
- * @param {*} req 
- * @param {*} res 
- */
+/*
+function postPlugin(plugin) {
+  let newPlugin = new Plugin(plugin);
+
+  return new Promise((resolve, reject) => {
+    newPlugin.save((err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(newPlugin);
+      }
+    });
+  });
+}
+*/
 function deletePlugin(req, res) {
   Plugin.findByIdAndRemove(req.params.id, (err, plugin) => {
     if (err) {
@@ -165,11 +159,7 @@ function deletePlugin(req, res) {
     res.json({ message: `${pluginname.nom} deleted` });
   });
 }
-/**
- * Function to update a plugin in the database
- * @param {*} req 
- * @param {*} res 
- */
+
 function updatePlugin(req, res) {
   console.log("Update on plugin : ");
   console.log(req.body);
@@ -187,30 +177,23 @@ function updatePlugin(req, res) {
     }
   );
 }
-/**
- * Function to put all the plugis in the database
- * @param {*} req 
- * @param {*} res 
- */
+
 function putPluginsInDB(req, res) {
   console.log("here");
-  console.log(pluginsDir);
   // On parcours le dossier pluginsDir et on récupère les sous-dossiers
-  fs.readdirSync(pluginsDir).forEach( // on parcours les dossiers dans la direction courante (pluginsDir) 
-    (name) => {   // pour chaque dossier  
+  
 
-      var filePath = path.join(pluginsDir, name); // on récupère le chemin du dossier
-      var stat = fs.statSync(filePath);
-      if (stat.isFile()) {
-        console.log("Ignoring file : " + name);
-      } else if (stat.isDirectory()){
-  const plugins = readPluginsFromDisk(filePath,name);
-
+  const plugins = readPluginsFromDisk(pluginsDir);
+ // console.log(plugins)
   plugins.forEach((p) => {
-
+    const existingPlugin = Plugin.findOne({ identifier: p.identifier });
+   /* if (existingPlugin) {
+      console.log(
+        `Plugin with name ${p.identifier} already exists in the database`
+      );
+    } else {*/
       savePluginToDB(p);
-  } );
-}
+   // }
   });
 
   res.send("All plugins saved to the database");
