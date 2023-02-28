@@ -13,13 +13,12 @@ let pluginsDirURL = "https://localhost:8080/…";
 tableau appelé plugins */
 
 function readPluginsFromDisk(dir, vendor) {
-  console.log("getPlugins");
 
   let plugins = [];
   
 
   //files = fs.readdirSync();
-  console.log("Building Repositiry.json...Reading " + pluginsDir + "...");
+  //console.log("Building Repositiry.json...Reading " + pluginsDir + "...");
 
   fs.readdirSync(dir).forEach((name) => {
     var filePath = path.join(dir, name);
@@ -40,7 +39,7 @@ function readPluginsFromDisk(dir, vendor) {
         // add the directory name to the descriptor
         descriptor.dirName = vendor + "/" + name;
 
-        console.log(descriptor)
+        //console.log(descriptor)
 
         plugins.push(descriptor);
       }
@@ -53,7 +52,7 @@ function readPluginsFromDisk(dir, vendor) {
 async function getPlugins(req, res) {
   let repository = {
     name: "WAP Repo from Faust IDE",
-    root: pluginPath,
+    root: pluginsDir,
     plugins: [],
   };
   Plugin.find((err, plugins) => {
@@ -99,13 +98,13 @@ function savePluginToDB(p) {
   plugin.dirName = p.dirName;
   console.log(p.dirName);
   console.log(" Plugin to save received : ");
-  //console.log(plugin);
+
 
   plugin.save((err) => {
     if (err) {
       console.log("Can't post plugin : ", err);
     }
-    console.log("${plugin.name} saved! ");
+    console.log(p.name + " saved! ");
   });
 }
 function postPlugin(req, res) {
@@ -127,30 +126,15 @@ function postPlugin(req, res) {
   plugin.hasMidiOutput = res.body.hasMidiOutput;
 
   console.log = "Post Plugin received : ";
-  console.log(plugin);
 
   plugin.save((err) => {
     if (err) {
       res.send("Can't post plugin : ", err);
     }
-    res.json({ message: "${plugin.name} saved! " });
+    res.json({ message: "${p.name} saved! " });
   });
 }
-/*
-function postPlugin(plugin) {
-  let newPlugin = new Plugin(plugin);
 
-  return new Promise((resolve, reject) => {
-    newPlugin.save((err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(newPlugin);
-      }
-    });
-  });
-}
-*/
 function deletePlugin(req, res) {
   Plugin.findByIdAndRemove(req.params.id, (err, plugin) => {
     if (err) {
@@ -180,20 +164,23 @@ function updatePlugin(req, res) {
 
 function putPluginsInDB(req, res) {
   console.log("here");
+  console.log(pluginsDir);
   // On parcours le dossier pluginsDir et on récupère les sous-dossiers
-  
+  fs.readdirSync(pluginsDir).forEach( // on parcours les dossiers dans la direction courante (pluginsDir) 
+    (name) => {   // pour chaque dossier  
 
-  const plugins = readPluginsFromDisk(pluginsDir);
- // console.log(plugins)
+      var filePath = path.join(pluginsDir, name); // on récupère le chemin du dossier
+      var stat = fs.statSync(filePath);
+      if (stat.isFile()) {
+        console.log("Ignoring file : " + name);
+      } else if (stat.isDirectory()){
+  const plugins = readPluginsFromDisk(filePath,name);
+
   plugins.forEach((p) => {
-    const existingPlugin = Plugin.findOne({ identifier: p.identifier });
-   /* if (existingPlugin) {
-      console.log(
-        `Plugin with name ${p.identifier} already exists in the database`
-      );
-    } else {*/
+
       savePluginToDB(p);
-   // }
+  } );
+}
   });
 
   res.send("All plugins saved to the database");
