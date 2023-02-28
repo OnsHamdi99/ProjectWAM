@@ -7,7 +7,9 @@ var VerifyToken = require(__root + 'auth/VerifyToken');
 router.use(bodyParser.urlencoded({ extended: true }));
 var User = require('../model/User');
 
-// CREATES A NEW USER
+/**
+ * Creates un new user
+ */
 router.post('/', function (req, res) {
     console.log("here");
     User.create({
@@ -21,7 +23,9 @@ router.post('/', function (req, res) {
         });
 });
 
-// RETURNS ALL THE USERS IN THE DATABASE
+/** 
+ * returns all the users in the database
+ */
 router.get('/', function (req, res) {
     User.find({}, function (err, users) {
         if (err) return res.status(500).send("There was a problem finding the users.");
@@ -29,7 +33,9 @@ router.get('/', function (req, res) {
     });
 });
 
-// GETS A SINGLE USER FROM THE DATABASE
+/**
+ * Gets a sigle user by id from the database
+ */
 router.get('/:id', function (req, res) {
     User.findById(req.params.id, function (err, user) {
         if (err) return res.status(500).send("There was a problem finding the user.");
@@ -38,7 +44,10 @@ router.get('/:id', function (req, res) {
     });
 });
 
-// DELETES A USER FROM THE DATABASE
+
+/** 
+ * Deletes a user from the database
+ */
 router.delete('/:id', function (req, res) {
     User.findByIdAndRemove(req.params.id, function (err, user) {
         if (err) return res.status(500).send("There was a problem deleting the user.");
@@ -46,7 +55,9 @@ router.delete('/:id', function (req, res) {
     });
 });
 
-// UPDATES A SINGLE USER IN THE DATABASE
+/**
+ * Updates a user in the database
+ */
 // Added VerifyToken middleware to make sure only an authenticated user can put to this route
 router.put('/:id', /* VerifyToken, */ function (req, res) {
     User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {

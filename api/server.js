@@ -18,7 +18,7 @@ mongoose.connect(uri, options)
   .then(() => {
     console.log("Connecté à la base MongoDB WAM dans le cloud !");
     console.log("at URI = " + uri);
-    console.log("vérifiez with http://localhost:8010/api/plugins que cela fonctionne")
+    console.log("vérifiez avec http://localhost:8010/api/plugins pour afficher les pluggins, http://localhost:8010/api/buildDB pour les mettre dans la base sinon")
     },
     err => {
       console.log('Erreur de connexion: ', err);
@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 let port = process.env.PORT || 8010;
 
 // Pour les fichiers statiques (html, css, etc.)
-app.use(express.static('plugins')); // ICI IMPORTANT !
+app.use(express.static('plugins')); // permet d'accéder aux fichiers statiques dans le dossier plugins
 // Avec la règle ci-dessous on peut redéfinir la page d’accueil
 app.get('/', (req, res) => { // Page d’accueil
   res.sendFile(__dirname + "/plugins/index.html");

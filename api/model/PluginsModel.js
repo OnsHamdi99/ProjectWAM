@@ -1,3 +1,7 @@
+/**
+ * Description: Plugin model  
+ * Author : Ons HAMDI 
+ */
 var mongoose = require('mongoose');  
 var PluginSchema = new mongoose.Schema({  
   id: Number,

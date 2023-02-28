@@ -36,11 +36,15 @@ router.post('/login', function(req, res) {
   });
 
 });
-
+/**
+ * Logout a user by deleting the token
+ */
 router.get('/logout', function(req, res) {
   res.status(200).send({ auth: false, token: null });
 });
-
+/**
+ * Register a new user
+ */
 router.post('/register', function(req, res) {
   var { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -59,14 +63,16 @@ router.post('/register', function(req, res) {
     // if user is registered without errors
     // create a token
     var token = jwt.sign({ id: user._id }, config.secret , {
-      expiresIn: 86400 // expires in 24 hours
+      expiresIn: 172800 // expires in 48 hours
     });
 
     res.status(200).send({ auth: true, token: token });
   });
 
 });
-
+/** 
+ * returns the current user
+ */
 router.get('/me', VerifyToken, function(req, res, next) {
 
   User.findById(req.userId, { password: 0 }, function (err, user) {
@@ -76,7 +82,9 @@ router.get('/me', VerifyToken, function(req, res, next) {
   });
 
 });
-
+/** 
+ * returns all the users in the database
+ */
 router.get('/all', function (req, res, next) {
   User.find().exec().then(items => {
     res.status(200).json(items);
