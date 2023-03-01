@@ -9,6 +9,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {MatToolbarModule  } from "@angular/material/toolbar";
 import {MatIconModule  } from "@angular/material/icon";
+import {MatCardModule } from "@angular/material/card";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import { FormsModule } from '@angular/forms';
+import { LoginComponent } from './components/login/login.component';
 
 
 @NgModule({
@@ -16,13 +20,14 @@ import {MatIconModule  } from "@angular/material/icon";
     AppComponent,
     UserProfileComponent,
     PluginContentComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatToolbarModule,MatIconModule
+    MatToolbarModule,MatIconModule,MatCardModule,MatFormFieldModule,FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

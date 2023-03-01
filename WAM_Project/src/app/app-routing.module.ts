@@ -4,10 +4,13 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 
 import { HomeComponent } from "./components/home/home.component";
 import { PluginContentComponent } from "./components/plugin-content/plugin-content.component";
+import {  LoginComponent} from "./components/login/login.component";
+
 const routes: Routes = [
   {path: 'user-profile', component: UserProfileComponent},
   {path: 'home', component : HomeComponent},
   {path:'plugin-content',component:PluginContentComponent},
+  {path:'login',component:LoginComponent},
   {path:'**',redirectTo:'home'}
 
 ];

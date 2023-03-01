@@ -11,14 +11,14 @@ export class HomeComponent {
 
     public list:any[]=[];
     ngOnInit(){
-            // var api='';
+            var api='plugins.json';
             
-            // this.common.get(api).then((response:any)=>{
+            this.common.get(api).then((response:any)=>{
 
 
-            // console.log(response);
+            console.log(response);
 
-            // // this.list=response.plugs;
-            // })
+            this.list=response.plugs;
+            })
       }
 }
