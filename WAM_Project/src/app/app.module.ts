@@ -1,33 +1,35 @@
+// import modules
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
+import { RouterModule, Routes } from '@angular/router';
+
+//import components
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { PluginContentComponent } from './components/plugin-content/plugin-content.component';
-import { HomeComponent } from './components/home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PluginListComponent } from './plugin-list/plugin-list.component';
+import { AddPluginComponent } from './add-plugin/add-plugin.component';
+import { PluginDetailComponent } from './plugin-detail/plugin-detail.component';
 
-import {MatToolbarModule  } from "@angular/material/toolbar";
-import {MatIconModule  } from "@angular/material/icon";
-import {MatCardModule } from "@angular/material/card";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import { FormsModule } from '@angular/forms';
-import { LoginComponent } from './components/login/login.component';
+const routes:Routes = [
+  {path: 'login', component:  LoginComponent},
+  {path: 'user', component:  UserProfileComponent},
+  {path: 'plugins', component:  PluginListComponent},
 
 
+]
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
     UserProfileComponent,
-    PluginContentComponent,
-    HomeComponent,
-    LoginComponent
+    PluginListComponent,
+    AddPluginComponent,
+    PluginDetailComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,MatIconModule,MatCardModule,MatFormFieldModule,FormsModule
+    BrowserModule, 
+    RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent]
