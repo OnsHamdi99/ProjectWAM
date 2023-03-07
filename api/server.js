@@ -79,26 +79,33 @@ app.use('/api/auth', AuthController);
 ///////////// end
 
 //// Authentification avec GitHub
+/*
+  Pour l'authentification avec GitHub, on utilise le module passport et le module passport-github2
+*/ 
 // étape 1 : configuration de passport avec GithubStrategy, qui est un module de passport pour gérer l'authentification avec GitHub
-passport.use(new GitHubStrategy({
-    clientID: githubClientId,
+passport.use(new GitHubStrategy({ 
+    clientID: githubClientId, 
     clientSecret: githubClientSecret,
-    callbackURL: "/auth/github/callback"
+    callbackURL: "/auth/github/callback" // URL de retour après l'authentification avec GitHub
 }, 
 (accessToken, refreshToken, profile, done) => {
-    //console.log(profile);
+    console.log(profile);
+
+    // find or create user based on the profile data
+    // fetch additional user data using the GitHub API and store it in your DB
+    // return the user object
     return done(null, profile); // profile contient les infos de l'utilisateur
 }
 ));
 
 // étape 2 : route pour initialiser l'authentification avec GitHub
-app.get('/auth/github', passport.authenticate('github')); 
+app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
 // étape 3 : route pour récupérer le code de retour de GitHub
 app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), 
 (req, res) => {
-    //console.log(req.user);
-    res.redirect('/'); // redirection vers la page d'accueil du site web 
+    console.log(req.user);
+    res.redirect('/'); // redirection vers la page d'accueil du site web authentification correcte 
 
 
 });
