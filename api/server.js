@@ -88,7 +88,8 @@ passport.use(new GitHubStrategy({
 (accessToken, refreshToken, profile, done) => {
     //console.log(profile);
     return done(null, profile); // profile contient les infos de l'utilisateur
-}));
+}
+));
 
 // étape 2 : route pour initialiser l'authentification avec GitHub
 app.get('/auth/github', passport.authenticate('github')); 
@@ -98,6 +99,8 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 (req, res) => {
     //console.log(req.user);
     res.redirect('/'); // redirection vers la page d'accueil du site web 
+
+
 });
 
 
