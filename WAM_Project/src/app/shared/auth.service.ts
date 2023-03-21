@@ -1,49 +1,32 @@
 import { Injectable } from '@angular/core';
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor() { }
-  
-  users = [ ["admin", "admin",true], ["user", "user",false] ];
-  currentUser = "";
-  loggedIn = false;
-  isCurrentUserAdmin:boolean|string = false;
+  loggedIn=false;
 
+  constructor(private router: Router) { }
 
-  logIn(username:string , password:string) {
-    let user = this.users.find(u => u[0] == username && u[1] == password);
-    if(user) {
-      this.loggedIn = true;
-      this.isCurrentUserAdmin = user[2];    
-      this.currentUser = username;
-      return true
+  isLoggedIn() {
+    const token = localStorage.getItem('jwt_token');
+      if (token) {
+        return true;
+      } else {
+        this.router.navigate(['/login']);
+        return false;
+      }
     }
-        
-    return false
-  }
 
-  logOut() {
-    this.currentUser = "";
-    this.loggedIn = false;
-  }
 
-  isAdmin() {
-    const isUserAdmin = new Promise(
-      (resolve, reject) => {
-        resolve(this.isCurrentUserAdmin); }
-    )
+    logout() {
+      localStorage.removeItem('jwt_token');
+      this.router.navigate(['/login']);
+      this.loggedIn=false;
 
-    return isUserAdmin;
-  }
+    }
 
-  isLogged() {
-    const isLogged = new Promise(
-      (resolve, reject) => {
-        resolve(this.loggedIn); }
-    )
+  // renvoie une promesse qui est résolue si l'utilisateur est loggué
 
-    return isLogged;
-  }
 }
