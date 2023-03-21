@@ -15,7 +15,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: any) {
+  onFileUpload(event: any) {
     const file: File = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file);

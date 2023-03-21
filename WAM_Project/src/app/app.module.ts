@@ -36,6 +36,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import {LoginComponent} from './AuthComponent/login/login.component';
 import {DeleteAccountComponent} from './AuthComponent/delete-account/delete-account.component';
 import {SignUpComponent} from './AuthComponent/sign-up/sign-up.component';
+import { ReactiveFormsModule } from '@angular/forms'; 
 
 const routes: Routes = [
   {path: 'user-profile', component: UserProfileComponent},
@@ -65,6 +66,7 @@ const routes: Routes = [
     MatInputModule,
     MatFormFieldModule,
     MatDatepickerModule,
+    ReactiveFormsModule,
     MatNativeDateModule,
     MatListModule,
     MatCardModule,

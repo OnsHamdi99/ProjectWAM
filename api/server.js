@@ -5,11 +5,11 @@
 //             Il utilise le module Passport pour gérer l'authentification avec GitHub
 
 let express = require('express');
-const passport = require('passport'); // Pour l'authentification avec GitHub
-const GitHubStrategy = require('passport-github2').Strategy; // Pour l'authentification avec GitHub 
+//const passport = require('passport'); // Pour l'authentification avec GitHub
+//const GitHubStrategy = require('passport-github2').Strategy; // Pour l'authentification avec GitHub 
 const config = require('./config'); // Pour l'authentification avec GitHub
-const githubClientId = config.githubClientId;
-const githubClientSecret = config.githubClientSecret;
+//const githubClientId = config.githubClientId;
+//const githubClientSecret = config.githubClientSecret;
 
 let app = express();
 let bodyParser = require('body-parser');
@@ -77,11 +77,11 @@ app.use('/api/routes', UserController);
 var AuthController = require(__root + 'auth/AuthController');
 app.use('/api/auth', AuthController);
 ///////////// end
-
+/*
 //// Authentification avec GitHub
 /*
   Pour l'authentification avec GitHub, on utilise le module passport et le module passport-github2
-*/ 
+
 // étape 1 : configuration de passport avec GithubStrategy, qui est un module de passport pour gérer l'authentification avec GitHub
 passport.use(new GitHubStrategy({ 
     clientID: githubClientId, 
@@ -96,8 +96,8 @@ passport.use(new GitHubStrategy({
     // return the user object
     return done(null, profile); // profile contient les infos de l'utilisateur
 }
-));
-
+)); */
+/*
 // étape 2 : route pour initialiser l'authentification avec GitHub
 app.get('/auth/github', passport.authenticate('github', { scope: [ 'user:email' ] }));
 
@@ -109,9 +109,15 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 
 
 });
-
+*/
 
 ////// end authentification avec GitHub
+
+//// début post d'un zip 
+
+
+
+//// fin post d'un dossier
 
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
