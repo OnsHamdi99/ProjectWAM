@@ -13,6 +13,9 @@ import {MatCardModule } from "@angular/material/card";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
+import { AuthComponentComponent } from './auth-component/auth-component.component';
+import { SignUpComponent } from './AuthComponent/sign-up/sign-up.component';
+import { DeleteAccountComponent } from './AuthComponent/delete-account/delete-account.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import { LoginComponent } from './components/login/login.component';
     UserProfileComponent,
     PluginContentComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    AuthComponentComponent,
+    SignUpComponent,
+    DeleteAccountComponent
   ],
   imports: [
     BrowserModule,
