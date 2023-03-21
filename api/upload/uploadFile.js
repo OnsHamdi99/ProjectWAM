@@ -12,8 +12,26 @@ function unzipFile(req, res) {
     zip.extractAllTo('./plugins/uploads/', true);
     res.send('file uploaded');
 }
+/*
+function to test the upload
+*/
+function test(req, res) {
+
+        if (req.mimetype != 'zip') {
+            return new Error('Wrong file type');
+        }
+        else {
+    res.send('test');
+           let unziped = unzipFile(req, res);
+            //TODO add Ambre's work to test the file
+
+            uploadFile(unziped, res);
+        }
+}
+
 /* 
 Function upload the received file to the server.
+// then load to the database if right
 */
 
 function uploadFile(req, res) {
@@ -21,10 +39,12 @@ function uploadFile(req, res) {
 //this const storage is used to specify the destination and filename of the uploaded file.
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './plugins/uploads/');//path to save file
+    destination: (req, file, callback) => {
+        callback(null, '../plugins/uploads/');//path to save file
     },
+    // then change the name of the file and make sure there are no spaces
     filename: (req, file, cb) => {
+        const name = file.originalname.split(' ').join('');
         cb(null, file.originalname);
     }
 });
