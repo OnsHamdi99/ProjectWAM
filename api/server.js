@@ -10,14 +10,54 @@ let express = require('express');
 const config = require('./config'); // Pour l'authentification avec GitHub
 //const githubClientId = config.githubClientId;
 //const githubClientSecret = config.githubClientSecret;
-
+var AdmZip = require("adm-zip");
 let app = express();
+const request = require('request');
 let bodyParser = require('body-parser');
 let plugins = require('./routes/PluginControler');
-
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-//mongoose.set('debug', true);
+var multer  = require("multer");
+// multer configuration: destination, filename customization, etc.
+/*var storage = multer.diskStorage({
+  destination: "./plugins/uploads",
+  filename: function (req, file, cb) {
+   // let binaryDotZipURL = req.body.url;
+    let currentDir = process.cwd(); 
+    console.log (binaryDotZipURL);
+  
+    const filename = file.originalname;
+    const suffix = filename.substring(filename.lastIndexOf('.'), filename.length);
+    request(binaryDotZipURL)
+    .pipe(fs.createWriteStream(currentDir + "/plugins/uploads/" + filename))
+    .on('close', function () {
+      console.log("file downloaded");
+      fs.createReadStream(currentDir + "/plugins/uploads/" + filename)
+      .pipe(
+        unzip.Extract({ path: currentDir + "/plugins/uploads/" }))
+      .on('close', function () {
+        console.log("file unzipped");
+      });
+    });
+    const baseNameWithoutSuffix = filename.substring(0, filename.lastIndexOf('.'));
+    const newName = baseNameWithoutSuffix + '-' + Date.now() + suffix;
+    cb(null, filename);
+  }
+});
+// instaciation of a multer processor
+var upload = multer({ storage: storage });
+*/
+var storage = multer.diskStorage({
+  destination: "./plugins/uploads",
+  filename: function (req, file, cb) {
+    const filename = file.originalname;
+    const suffix = filename.substring(filename.lastIndexOf('.'), filename.length);
+    const baseNameWithoutSuffix = filename.substring(0, filename.lastIndexOf('.'));
+    const newName = baseNameWithoutSuffix + '-' + Date.now() + suffix;
+    cb(null, filename);
+  } } );
+  var upload = multer({ storage: storage });
+
 
 const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/WAM?retryWrites=true&w=majority';
 const options = {
@@ -113,11 +153,16 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 
 ////// end authentification avec GitHub
 
-//// début post d'un zip 
+//// début gestion upload file
+app.post("/api/file", upload.array('file'), (req, res) => {
+  let binaryDotZipURL = req.body.url;
+  console.log("received " + req.files.length + " files");// form files
+  console.dir(req.body.url); // form fields
+  res.status(204).end();  
+});
 
 
-
-//// fin post d'un dossier
+//// fin gestion upload
 
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);

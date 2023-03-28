@@ -50,6 +50,7 @@ function readPluginsFromDisk(dir, vendor) {
 }
 
 async function getPlugins(req, res) {
+  var aggregateQuery = Plugin.aggregate();
   let repository = {
     name: "WAP Repo from Faust IDE",
     root: pluginsBaseDir,
@@ -60,11 +61,16 @@ async function getPlugins(req, res) {
       res.send(err);
     } else {
       repository.plugins = plugins;
+      Plugin.aggregatePaginate(aggregateQuery,
+        {page : parseInt(req.query.page) || 1, limit : parseInt(req.query.limit)|| 20,}, 
+        (err, repository) => {
+          if (err) {
+            res.send(err);
+          } 
       res.json(repository);
+    });
     }
-  });
-
-  // res.json(repository);
+  }); 
 }
 
 function getPlugin(req, res) {
