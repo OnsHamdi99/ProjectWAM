@@ -3,7 +3,9 @@
 //              et de communiquer avec la base de données MongoDB avec  le module Mongoose 
 //              Il utilise le framework ExpressJS pour gérer les routes et les requêtes HTTP
 //             Il utilise le module Passport pour gérer l'authentification avec GitHub
-
+const stream = require('stream');
+const fs = require('fs');
+const unzipper = require('unzipper');
 let express = require('express');
 //const passport = require('passport'); // Pour l'authentification avec GitHub
 //const GitHubStrategy = require('passport-github2').Strategy; // Pour l'authentification avec GitHub 
@@ -55,7 +57,45 @@ var storage = multer.diskStorage({
     const baseNameWithoutSuffix = filename.substring(0, filename.lastIndexOf('.'));
     const newName = baseNameWithoutSuffix + '-' + Date.now() + suffix;
     cb(null, filename);
-  } } );
+  }, 
+  fileFilter: function (req, file) {
+    if (file.originalname.endsWith('.zip')) {
+     transformFile: function (req, file, cb){
+      const unzipStream = unzipper.Parse(); 
+      constTransform = new stream.Transform({ 
+        objectMode: true,
+        transform: function (entry, _, cb) {
+          const fileName = entry.pth; 
+          const type = entry.type;
+          if (type === 'File') {
+  
+            entry.pipe(new stream.PassThrough())
+              .on('data', function (chunk) {
+
+                const writeStream = fs.createWriteStream('./plugins/uploads/' + fileName);
+                writeStream.write(chunk);
+              })
+              .on('end', function () {
+
+                cb();
+              });
+            }
+          }
+        });
+        file.stream.pipe(unzipStream).pipe(transform)
+        .on('error', function (err) {
+      
+          cb(err);
+        })
+        .on('finish', function () {
+
+          cb(null, file);
+        });
+    } 
+  }
+  }
+});
+
   var upload = multer({ storage: storage });
 
 
