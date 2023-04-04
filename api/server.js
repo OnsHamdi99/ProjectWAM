@@ -70,7 +70,7 @@ mongoose.Promise = global.Promise;
   }
 });
 */
-//var upload = multer({ storage: storage });
+
 
 
 const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/WAM?retryWrites=true&w=majority';
@@ -166,9 +166,16 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 */
 
 ////// end authentification avec GitHub
-//j'ai fait upload et dézippage , ç te suffit ?!!
+
 /*
 //// début gestion upload file V1
+var upload = multer({ storage: storage });
+var storage = multer.diskStorage({
+  destination: "./plugins/uploads",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
 app.post("/api/file", upload.array('file'), (req, res) => {
   console.log('File received ! Deziping...')
   // retrieve the file path from the request
