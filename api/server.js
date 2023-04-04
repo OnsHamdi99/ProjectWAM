@@ -12,44 +12,31 @@ let express = require('express');
 const config = require('./config'); // Pour l'authentification avec GitHub
 //const githubClientId = config.githubClientId;
 //const githubClientSecret = config.githubClientSecret;
-var AdmZip = require("adm-zip");
+
 let app = express();
 const request = require('request');
 let bodyParser = require('body-parser');
 let plugins = require('./routes/PluginControler');
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+
+//début gestion des fichiers
 var multer  = require("multer");
 // multer configuration: destination, filename customization, etc.
-/*var storage = multer.diskStorage({
+var upload = multer({ storage: storage });
+
+// change the storage engine to extract zip files
+var storage = multer.diskStorage({
   destination: "./plugins/uploads",
   filename: function (req, file, cb) {
-   // let binaryDotZipURL = req.body.url;
-    let currentDir = process.cwd(); 
-    console.log (binaryDotZipURL);
-  
-    const filename = file.originalname;
-    const suffix = filename.substring(filename.lastIndexOf('.'), filename.length);
-    request(binaryDotZipURL)
-    .pipe(fs.createWriteStream(currentDir + "/plugins/uploads/" + filename))
-    .on('close', function () {
-      console.log("file downloaded");
-      fs.createReadStream(currentDir + "/plugins/uploads/" + filename)
-      .pipe(
-        unzip.Extract({ path: currentDir + "/plugins/uploads/" }))
-      .on('close', function () {
-        console.log("file unzipped");
-      });
-    });
-    const baseNameWithoutSuffix = filename.substring(0, filename.lastIndexOf('.'));
-    const newName = baseNameWithoutSuffix + '-' + Date.now() + suffix;
-    cb(null, filename);
+    cb(null, file.originalname);
   }
 });
+
 // instaciation of a multer processor
-var upload = multer({ storage: storage });
-*/
-var storage = multer.diskStorage({
+
+// fin gestion des fichiers
+/*var storage = multer.diskStorage({
   destination: "./plugins/uploads",
   filename: function (req, file, cb) {
     const filename = file.originalname;
@@ -95,7 +82,7 @@ var storage = multer.diskStorage({
   }
   }
 });
-
+*/
   var upload = multer({ storage: storage });
 
 
@@ -192,14 +179,32 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 */
 
 ////// end authentification avec GitHub
+//j'ai fait upload et dézippage , ç te suffit ?!!
 
 //// début gestion upload file
 app.post("/api/file", upload.array('file'), (req, res) => {
-  let binaryDotZipURL = req.body.url;
-  console.log("received " + req.files.length + " files");// form files
-  console.dir(req.body.url); // form fields
-  res.status(204).end();  
+  console.log('File received ! Deziping...')
+  // retrieve the file path from the request
+  const filePath = req.files[0].path; // get the path of the file
+  console.log(filePath);
+  if (filePath.endsWith('.zip')) {
+    fs.createReadStream(filePath)
+      .pipe(unzipper.Extract({ path: './plugins/uploads' }))
+      .on('close', () => {
+        console.log('File deziped !');
+        res.status(204).end();
+      })
+      .on('error', (err) => {
+        console.log('Error while deziping : ' + err.message);
+        res.status(500).json({ error: err.message });
+      }
+    );
+  } else {
+    res.status(400).json({ error: 'The file is not a zip file !' });
+  }
+  
 });
+
 
 
 //// fin gestion upload

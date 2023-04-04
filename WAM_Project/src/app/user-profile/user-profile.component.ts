@@ -19,9 +19,7 @@ export class UserProfileComponent implements OnInit {
   onFileUpload(event: any) {
     const file: File = event.target.files[0];
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('url', this.baseUrl + '/plugins/uploads/' + file.name);
-    console.log( this.baseUrl + '/uploads/' + file.name);
+    formData.append('file', file, file.name);
     this.http.post(this.baseUrl + '/api/file', 
     formData).subscribe(
       response => console.log('Upload successful'),
