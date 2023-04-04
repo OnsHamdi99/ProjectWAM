@@ -20,13 +20,13 @@ export class UserProfileComponent implements OnInit {
    const file: File = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file, file.name);
-    /*
+    
     console.log(formData.get('file'));
     this.http.post(this.baseUrl + '/api/file', 
     formData).subscribe(
       response => console.log('Upload successful'),
       error => console.error(error)
-    ); */
+    ); /*
     let url = this.baseUrl + '/api/file';
     fetch (url, {
       method : 'POST',
@@ -36,7 +36,7 @@ export class UserProfileComponent implements OnInit {
 }).catch(error => {
       console.log(error);
     }
-); 
+); */
   }
 
 }
