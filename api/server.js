@@ -20,19 +20,6 @@ let plugins = require('./routes/PluginControler');
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-//début gestion des fichiers
-var multer  = require("multer");
-// multer configuration: destination, filename customization, etc.
-var upload = multer({ storage: storage });
-
-// change the storage engine to extract zip files
-var storage = multer.diskStorage({
-  destination: "./plugins/uploads",
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
 // instaciation of a multer processor
 
 // fin gestion des fichiers
@@ -83,7 +70,7 @@ var storage = multer.diskStorage({
   }
 });
 */
-  var upload = multer({ storage: storage });
+//var upload = multer({ storage: storage });
 
 
 const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/WAM?retryWrites=true&w=majority';
@@ -180,8 +167,8 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 
 ////// end authentification avec GitHub
 //j'ai fait upload et dézippage , ç te suffit ?!!
-
-//// début gestion upload file
+/*
+//// début gestion upload file V1
 app.post("/api/file", upload.array('file'), (req, res) => {
   console.log('File received ! Deziping...')
   // retrieve the file path from the request
@@ -204,10 +191,57 @@ app.post("/api/file", upload.array('file'), (req, res) => {
   }
   
 });
-
-
-
 //// fin gestion upload
+*/ 
+// gestion upload V2 
+//début gestion des fichiers
+var multer  = require("multer");
+// multer configuration: destination, filename customization, etc.
+var upload = multer({ storage: storage });
+
+// change the storage engine to extract zip files
+var storage = multer.diskStorage({
+  destination: "./plugins/uploads",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+multerData = multer();
+app.post("/api/file", multerData.array('file'), function(req, res) {
+  console.log(req.body);
+  let wapName = req.body.name;
+  console.log(wapName);
+
+
+  let binaryDotZipURL = req.body.url;
+  console.log(binaryDotZipURL);
+  let currentDir = process.cwd() + "/plugins/uploads";
+
+ let wapDir = currentDir + wapName;
+ // console.log("/addBinaryDotZip, adding binary.zip to " + wapDir);
+
+  console.log("Sending request to GET " + binaryDotZipURL);
+  // TODO : check if you can do this with promises...
+  request(binaryDotZipURL)
+    .pipe(fs.createWriteStream(wapDir + "/binary.zip"))
+    .on("close", function() {
+      console.log("binary.zip has been downloaded, now unzipping it...");
+      fs.createReadStream(wapDir + "/binary.zip").pipe(
+        unzip.Extract({ path: wapDir })
+       ).on("close", function() {
+      console.log("The file has been unzipped...");
+      console.log("Updating main.json:adding category:FaustIdeNew and thumbnail:img/unknown");
+     // update main.json by adding a category and a thumbnail
+  let rawdata = fs.readFileSync(wapDir + '/main.json');
+  let mainjson = JSON.parse(rawdata);
+  mainjson.category = "FaustIdeNew";
+  mainjson.thumbnail="img/unknown.jpg";
+  let data = JSON.stringify(mainjson);
+  fs.writeFileSync(wapDir + '/main.json', data);
+      });
+   });
+});
 
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
