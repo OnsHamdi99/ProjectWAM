@@ -16,10 +16,15 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
   }
 
+  envoieForm() {
+
+  }
+
   onFileUpload(event: any) {
    const file: File = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file, file.name);
+    formData.append('url', 'http://localhost:8010/api/file');
     
     console.log(formData.get('file'));
     this.http.post(this.baseUrl + '/api/file', 

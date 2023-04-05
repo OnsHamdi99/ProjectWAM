@@ -214,11 +214,12 @@ var storage = multer.diskStorage({
   }
 });
 
-multerData = multer();
+multerData = multer(storage);
 app.post("/api/file", multerData.array('file'), function(req, res) {
+  console.log("body");
   console.log(req.body);
-  let wapName = req.body.name;
-  console.log(wapName);
+  let wapName = req.body.url;
+  console.log("url " + wapName);
 
 
   let binaryDotZipURL = req.body.url;
