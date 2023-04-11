@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http'; 
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { AuthService } from '../shared/auth.service';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -11,22 +11,22 @@ import { Observable } from 'rxjs';
 
 export class UserProfileComponent implements OnInit {
   baseUrl = 'http://localhost:8010';
-  constructor(private http: HttpClient) { }
-
-  ngOnInit() {
+  constructor(private http: HttpClient, private authService:AuthService) { }
+  username = this.authService.getUserName();
+  ngOnInit(): void {
   }
 
   envoieForm() {
 
-  }
+  } 
 
   onFileUpload(event: any) {
    const file: File = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('url', 'http://localhost:8010/api/file');
-    
-    console.log(formData.get('file'));
+
+   // formData.append("username", this.username); 
     this.http.post(this.baseUrl + '/api/file', 
     formData).subscribe(
       response => console.log('Upload successful'),

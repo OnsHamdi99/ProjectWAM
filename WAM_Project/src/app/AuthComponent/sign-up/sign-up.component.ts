@@ -19,18 +19,19 @@ export class SignUpComponent implements OnInit {
     password : string = ""; 
     email : string="";
     username : string="";
-    url =  "http://localhost:3000/api/auth";
+    url =  "http://localhost:8010/api/auth";
 
     register(){
       const body = { email: this.email, name : this.username, password: this.password };
       this.http.post(this.url + '/register', body).subscribe(
         response => { 
           this.router.navigate(['/home']);
-          this.snackBar.open("Bienvenue", "Fermer", {duration: 5000});
+          this.snackBar.open("Welcome", "Cole", {duration: 5000});
      
         }, 
+  
         (error) => {
-       this.snackBar.open("Identifiants incorrects", "Fermer", {duration: 5000}); } 
+       this.snackBar.open("Incorrect logins", "close", {duration: 5000}); } 
      )
     }
     

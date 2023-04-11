@@ -22,57 +22,7 @@ mongoose.Promise = global.Promise;
 
 // instaciation of a multer processor
 
-// fin gestion des fichiers
-/*var storage = multer.diskStorage({
-  destination: "./plugins/uploads",
-  filename: function (req, file, cb) {
-    const filename = file.originalname;
-    const suffix = filename.substring(filename.lastIndexOf('.'), filename.length);
-    const baseNameWithoutSuffix = filename.substring(0, filename.lastIndexOf('.'));
-    const newName = baseNameWithoutSuffix + '-' + Date.now() + suffix;
-    cb(null, filename);
-  }, 
-  fileFilter: function (req, file) {
-    if (file.originalname.endsWith('.zip')) {
-     transformFile: function (req, file, cb){
-      const unzipStream = unzipper.Parse(); 
-      constTransform = new stream.Transform({ 
-        objectMode: true,
-        transform: function (entry, _, cb) {
-          const fileName = entry.pth; 
-          const type = entry.type;
-          if (type === 'File') {
-  
-            entry.pipe(new stream.PassThrough())
-              .on('data', function (chunk) {
-
-                const writeStream = fs.createWriteStream('./plugins/uploads/' + fileName);
-                writeStream.write(chunk);
-              })
-              .on('end', function () {
-
-                cb();
-              });
-            }
-          }
-        });
-        file.stream.pipe(unzipStream).pipe(transform)
-        .on('error', function (err) {
-      
-          cb(err);
-        })
-        .on('finish', function () {
-
-          cb(null, file);
-        });
-    } 
-  }
-  }
-});
-*/
-
-
-
+const multer = require('multer');
 const uri = 'mongodb+srv://ons:mdp@cluster0.okglpv3.mongodb.net/WAM?retryWrites=true&w=majority';
 const options = {
   useNewUrlParser: true,
@@ -123,14 +73,16 @@ app.route(prefix + '/plugins')
 app.route(prefix + '/buildDB')
   .get(plugins.putPluginsInDB);
 
-////////// User 
+////////// User Authentification
 global.__root   = __dirname + '/'; 
 var UserController = require(__root + 'routes/UserController');
 app.use('/api/routes', UserController);
 
 var AuthController = require(__root + 'auth/AuthController');
 app.use('/api/auth', AuthController);
-///////////// end
+
+///////////// end of User Authentification
+
 /*
 //// Authentification avec GitHub
 /*
@@ -167,89 +119,46 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 
 ////// end authentification avec GitHub
 
-/*
 //// début gestion upload file V1
-var upload = multer({ storage: storage });
-var storage = multer.diskStorage({
-  destination: "./plugins/uploads",
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'plugins/uploads');
+  },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
-  }
+  } 
 });
-app.post("/api/file", upload.array('file'), (req, res) => {
-  console.log('File received ! Deziping...')
-  // retrieve the file path from the request
-  const filePath = req.files[0].path; // get the path of the file
-  console.log(filePath);
-  if (filePath.endsWith('.zip')) {
-    fs.createReadStream(filePath)
-      .pipe(unzipper.Extract({ path: './plugins/uploads' }))
-      .on('close', () => {
-        console.log('File deziped !');
-        res.status(204).end();
-      })
-      .on('error', (err) => {
-        console.log('Error while deziping : ' + err.message);
-        res.status(500).json({ error: err.message });
-      }
-    );
-  } else {
-    res.status(400).json({ error: 'The file is not a zip file !' });
-  }
-  
+
+const upload = multer({ storage: storage });
+
+app.post('/api/file', upload.single('file'), (req, res) => {
+  console.log(req.file);
+  console.log("File received ! Beginning to unzip...");
+  const file = req.file;
+  const filePath = file.path;
+ console.log("filePath = " + filePath);
+ if (filePath.endsWith('.zip')) {
+ fs.createReadStream(filePath)
+ .pipe(unzipper.Extract({ path: './plugins/uploads' }))
+ .on('close', () => {
+   console.log('File deziped !');
+   res.status(204).end();
+ })
+ .on('error', (err) => {
+   console.log('Error while deziping : ' + err.message);
+   res.status(500).json({ error: err.message });
+ }
+);
+} else {
+res.status(400).json({ error: 'The file is not a zip file !' });
+}
+
 });
+
+
 //// fin gestion upload
-*/ 
-// gestion upload V2 
-//début gestion des fichiers
-var multer  = require("multer");
-// multer configuration: destination, filename customization, etc.
-var upload = multer({ storage: storage });
-
-// change the storage engine to extract zip files
-var storage = multer.diskStorage({
-  destination: "./plugins/uploads",
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-multerData = multer(storage);
-app.post("/api/file", multerData.array('file'), function(req, res) {
-  console.log("body");
-  console.log(req.body);
-  let wapName = req.body.url;
-  console.log("url " + wapName);
 
 
-  let binaryDotZipURL = req.body.url;
-  console.log(binaryDotZipURL);
-  let currentDir = process.cwd() + "/plugins/uploads";
-
- let wapDir = currentDir + wapName;
- // console.log("/addBinaryDotZip, adding binary.zip to " + wapDir);
-
-  console.log("Sending request to GET " + binaryDotZipURL);
-  // TODO : check if you can do this with promises...
-  request(binaryDotZipURL)
-    .pipe(fs.createWriteStream(wapDir + "/binary.zip"))
-    .on("close", function() {
-      console.log("binary.zip has been downloaded, now unzipping it...");
-      fs.createReadStream(wapDir + "/binary.zip").pipe(
-        unzip.Extract({ path: wapDir })
-       ).on("close", function() {
-      console.log("The file has been unzipped...");
-      console.log("Updating main.json:adding category:FaustIdeNew and thumbnail:img/unknown");
-     // update main.json by adding a category and a thumbnail
-  let rawdata = fs.readFileSync(wapDir + '/main.json');
-  let mainjson = JSON.parse(rawdata);
-  mainjson.category = "FaustIdeNew";
-  mainjson.thumbnail="img/unknown.jpg";
-  let data = JSON.stringify(mainjson);
-  fs.writeFileSync(wapDir + '/main.json', data);
-      });
-   });
-});
 
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);

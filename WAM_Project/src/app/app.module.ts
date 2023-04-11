@@ -39,7 +39,9 @@ import {SignUpComponent} from './AuthComponent/sign-up/sign-up.component';
 import { ReactiveFormsModule } from '@angular/forms'; 
 
 const routes: Routes = [
-  {path: 'user-profile', component: UserProfileComponent},
+
+  {path: 'home', component: UserProfileComponent},
+  {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard],},
   {path: 'delete-account', component: DeleteAccountComponent},
   {path: 'sign-up', component: SignUpComponent},
   {path:'login',component:LoginComponent},
