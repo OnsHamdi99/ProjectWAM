@@ -19,6 +19,7 @@ router.post('/', function (req, res) {
             return res.status(409).send("A user with that email already exists");
         }
     });
+    console.log("Creating user: " + req.body.username );
     User.create({
             username : req.body.username,
             email : req.body.email,

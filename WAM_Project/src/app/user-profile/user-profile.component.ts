@@ -2,6 +2,7 @@ import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
+
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -19,6 +20,7 @@ export class UserProfileComponent implements OnInit {
   envoieForm() {
 
   } 
+  
 
   onFileUpload(event: any) {
    const file: File = event.target.files[0];
@@ -42,6 +44,9 @@ export class UserProfileComponent implements OnInit {
       console.log(error);
     }
 ); */
+  }
+  logout(){
+    this.authService.logout();
   }
 
 }

@@ -31,7 +31,17 @@ export class SignUpComponent implements OnInit {
         }, 
   
         (error) => {
-       this.snackBar.open("Incorrect logins", "close", {duration: 5000}); } 
+          //console.log the type of error.status
+          if (error.status == 409) {
+           this.snackBar.open("User with this email already exists", "close", {duration: 5000}); 
+          } 
+          else if (error.status==400) {
+            this.snackBar.open("Invalid parameters", "close", {duration: 5000}); 
+           }
+           else {
+            this.snackBar.open("Something went wrong. No account created", "close", {duration: 5000});
+           }
+          }
      )
     }
     
