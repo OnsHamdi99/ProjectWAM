@@ -142,6 +142,7 @@ app.post('/api/file', upload.single('file'), (req, res) => {
  .pipe(unzipper.Extract({ path: './plugins/uploads' }))
  .on('close', () => {
    console.log('File deziped !');
+
    res.status(204).end();
  })
  .on('error', (err) => {
@@ -152,6 +153,13 @@ app.post('/api/file', upload.single('file'), (req, res) => {
 } else {
 res.status(400).json({ error: 'The file is not a zip file !' });
 }
+fs.unlink(filePath, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Zip file deleted !');
+  }
+});
 
 });
 
