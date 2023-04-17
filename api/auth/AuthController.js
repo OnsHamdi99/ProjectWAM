@@ -94,6 +94,17 @@ router.get('/me', VerifyToken, function(req, res, next) {
   });
 
 });
+/**returns the user's username */
+router.get('/username', VerifyToken, function(req, res, next) {
+  console.log("USERNAME FETCHING");
+  User.findById(req.userId, { password: 0 }, function (err, user) {
+    if (err) return res.status(500).send("There was a problem finding the user.");
+    if (!user) return res.status(404).send("No user found.");
+    res.status(200).json({ username: user.username });
+    
+  });
+});
+
 /** 
  * returns all the users in the database
  */

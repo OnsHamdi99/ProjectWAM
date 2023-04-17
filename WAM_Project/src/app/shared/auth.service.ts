@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 import jwtDecode from 'jwt-decode';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   loggedIn=false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
   /* 
     Check if the user is logged in
   */
@@ -23,19 +26,16 @@ export class AuthService {
 getToken(){ 
   return localStorage.getItem('jwt_token');
 }
-    getUserName() {
-      if (this.isLoggedIn()) {
-        const token = localStorage.getItem('jwt_token');
-        if(token) {
-          console.log("True TOKEN");
-          console.log(token);
-        
-          const payload = jwtDecode(token);
-          console.log(payload);
-         // return payload.username;
-      }
+url = 'http://localhost:8010/api/auth';
+
+    getUserName():Observable<string> {
+      const token = this.getToken();
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      return this.http.get<{ username: string }>(`${this.url}/username`, { headers }).pipe(
+        map(response => response.username)
+      );
     }
-    }
+    
     /* 
       Log the user out
     */

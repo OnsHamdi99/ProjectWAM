@@ -121,7 +121,9 @@ app.get('/auth/github/callback', passport.authenticate('github', { failureRedire
 
 //// début gestion upload file V1
 const storage = multer.diskStorage({
+
   destination: function (req, file, cb) {
+
     cb(null, 'plugins/uploads');
   },
   filename: function (req, file, cb) {
