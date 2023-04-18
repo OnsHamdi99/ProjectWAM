@@ -40,7 +40,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
 
-  {path: 'home', component: UserProfileComponent},
+  {path: 'home', component: UserProfileComponent,canActivate: [AuthGuard],},
   {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard],},
   {path: 'delete-account', component: DeleteAccountComponent},
   {path: 'sign-up', component: SignUpComponent},

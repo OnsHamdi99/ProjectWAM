@@ -43,7 +43,7 @@ mongoose.connect(uri, options)
 // Pour accepter les connexions cross-domain (CORS)
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
@@ -73,6 +73,11 @@ app.route(prefix + '/plugins')
 app.route(prefix + '/buildDB')
   .get(plugins.putPluginsInDB);
 
+  /*
+  app.get("/api/auth/username", (req, res) => { 
+    res.send("username");
+  });
+*/
 ////////// User Authentification
 global.__root   = __dirname + '/'; 
 var UserController = require(__root + 'routes/UserController');

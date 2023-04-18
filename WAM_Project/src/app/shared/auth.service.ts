@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
-import jwtDecode from 'jwt-decode';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,14 +28,14 @@ getToken(){
 }
 url = 'http://localhost:8010/api/auth';
 
-    getUserName():Observable<string> {
+    getUserName():Observable<any> {
       const token = this.getToken();
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get<{ username: string }>(`${this.url}/username`, { headers }).pipe(
-        map(response => response.username)
-      );
+      console.log(token);
+      const headers = new HttpHeaders().set('Authorization', `${token}`);
+      //console.log(headers);
+      return this.http.get<{ username: string }>(`${this.url}/username`, { headers });
     }
-    
+
     /* 
       Log the user out
     */

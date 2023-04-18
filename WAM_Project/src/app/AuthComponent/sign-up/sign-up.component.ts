@@ -22,7 +22,7 @@ export class SignUpComponent implements OnInit {
     url =  "http://localhost:8010/api/auth";
 
     register(){
-      const body = { email: this.email, name : this.username, password: this.password };
+      const body = { email: this.email, username : this.username, password: this.password };
       this.http.post(this.url + '/register', body).subscribe(
         response => { 
           this.router.navigate(['/home']);
