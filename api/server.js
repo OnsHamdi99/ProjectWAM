@@ -139,14 +139,18 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post('/api/file', upload.single('file'), (req, res) => {
-  console.log(req.file);
+ 
   console.log("File received ! Beginning to unzip...");
   const file = req.file;
-  const filePath = file.path;
+ const username = req.body.username;
+ console.log("username = " + username);
+  const filePath = file.path ;
  console.log("filePath = " + filePath);
+
  if (filePath.endsWith('.zip')) {
- fs.createReadStream(filePath)
- .pipe(unzipper.Extract({ path: './plugins/uploads' }))
+ fs.createReadStream(filePath) // lecture du fichier zip
+ .pipe(unzipper.Extract({ path: './plugins/uploads/' 
+}))
  .on('close', () => {
    console.log('File deziped !');
 

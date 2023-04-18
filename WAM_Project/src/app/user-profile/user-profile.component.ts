@@ -13,13 +13,16 @@ import { AuthService } from '../shared/auth.service';
 export class UserProfileComponent implements OnInit {
   baseUrl = 'http://localhost:8010';
   constructor(private http: HttpClient, private authService:AuthService) { }
-  username =  this.authService.getUserName().subscribe(
-    username => console.log(username));    
+username: string = '';
+ value = this.authService.getUserName().subscribe(
+   (    value: any) => {
+      this.username = value;
+    console.log(this.username) } 
+  );   
+   
 
 
   ngOnInit(): void {
-    //console.log(this.username);
-    console.log(this.username);
   }
 
   envoieForm() {
@@ -33,8 +36,9 @@ export class UserProfileComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('url', 'http://localhost:8010/api/file');
-
-    //formData.append("username", this.username); 
+  
+   formData.append("username",this.username);
+ 
     this.http.post(this.baseUrl + '/api/file', 
     formData).subscribe(
       response => console.log('Upload successful'),
