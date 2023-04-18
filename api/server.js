@@ -149,7 +149,7 @@ app.post('/api/file', upload.single('file'), (req, res) => {
 
  if (filePath.endsWith('.zip')) {
  fs.createReadStream(filePath) // lecture du fichier zip
- .pipe(unzipper.Extract({ path: './plugins/uploads/' 
+ .pipe(unzipper.Extract({ path: './plugins/uploads/ ' + username
 }))
  .on('close', () => {
    console.log('File deziped !');
