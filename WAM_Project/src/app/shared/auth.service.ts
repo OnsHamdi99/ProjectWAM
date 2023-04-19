@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 @Injectable({
@@ -10,7 +10,9 @@ import { map, tap } from 'rxjs/operators';
 export class AuthService {
   loggedIn=false;
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) { 
+    
+  }
   /* 
     Check if the user is logged in
   */
@@ -26,15 +28,16 @@ export class AuthService {
 getToken(){ 
   return localStorage.getItem('jwt_token');
 }
-url = 'http://localhost:8010/api/auth';
+url = 'http://localhost:8010/api';
 
     getUserName():Observable<any> {
       const token = this.getToken();
-      console.log(token);
       const headers = new HttpHeaders().set('Authorization', `${token}`);
-      //console.log(headers);
-      return this.http.get<{ username: string }>(`${this.url}/username`, { headers });
+    
+      return this.http.get<{ username: string }>(`${this.url}/auth/username`, { headers });
     }
+   
+  
 
     /* 
       Log the user out
@@ -49,3 +52,8 @@ url = 'http://localhost:8010/api/auth';
   // renvoie une promesse qui est résolue si l'utilisateur est loggué
 
 }
+
+
+
+
+ 

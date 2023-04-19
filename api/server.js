@@ -176,8 +176,36 @@ fs.unlink(filePath, (err) => {
 
 
 //// fin gestion upload
-//début gestion des workspaces 
+//début gestion des workspaces
 
+
+app.get('/api/workspace', (req, res) => {
+  //const username = req.params.username;
+   const username = req.query.username;
+  
+ 
+   console.log("get workspace for user " + username);
+  // console.log("get workspace for userq " + usernameq);
+   const filePath = './plugins/uploads/' + username ;
+ console.log("filePath = " + filePath);
+   fs.readdir(filePath, (err, files) => {
+     if (err) {
+       console.log("erreur de lecture du repertoire");
+       res.status(500).json({ error: err.message });
+     } else {
+       console.log("lecture du repertoire ok");
+ 
+       res.status(200).json(files);
+     }
+   });
+ });
+ 
+
+
+
+
+
+//// fin gestion des workspaces
 
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);

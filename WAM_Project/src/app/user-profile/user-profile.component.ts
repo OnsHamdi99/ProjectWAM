@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http'; 
+import { HttpClient, HttpEvent, HttpRequest, HttpParams, HttpHeaders} from '@angular/common/http'; 
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
@@ -13,18 +13,17 @@ import { AuthService } from '../shared/auth.service';
 export class UserProfileComponent implements OnInit {
   baseUrl = 'http://localhost:8010';
   constructor(private http: HttpClient, private authService:AuthService) { }
-username: string = '';
- value = this.authService.getUserName().subscribe(
-   (    value: any) => {
-      this.username = value;
-    console.log(this.username) } 
-  );   
-   
-
+  files:any;
+  username: string = '';
+ 
 
   ngOnInit(): void {
+    this.authService.getUserName().subscribe(
+      (    value: any) => {
+         this.username = value;
+       console.log(this.username) }   
+    ); 
   }
-
   envoieForm() {
 
   } 
@@ -59,4 +58,25 @@ username: string = '';
     this.authService.logout();
   }
 
+  getUserFiles() { 
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders().set('Authorization', `${token}`);
+    console.log(this.username + " on getuserfiles function");
+    const params = new HttpParams().set('username', this.username);
+    const url = `${this.baseUrl}/api/workspace`;
+
+    console.log(url);
+    return this.http.get(url, { headers, params }); 
+    
+    
+  } 
+getFiles(){
+    this.getUserFiles().subscribe(
+      (response: any) => {
+        this.files = response;
+        console.log(response);
+      }
+    );
+  }
 }
