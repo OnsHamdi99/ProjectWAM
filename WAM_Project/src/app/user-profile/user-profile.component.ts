@@ -58,21 +58,10 @@ export class UserProfileComponent implements OnInit {
     this.authService.logout();
   }
 
-  getUserFiles() { 
-    const token = this.authService.getToken();
-
-    const headers = new HttpHeaders().set('Authorization', `${token}`);
-    console.log(this.username + " on getuserfiles function");
-    const params = new HttpParams().set('username', this.username);
-    const url = `${this.baseUrl}/api/workspace`;
-
-    console.log(url);
-    return this.http.get(url, { headers, params }); 
-    
-    
-  } 
 getFiles(){
-    this.getUserFiles().subscribe(
+  this.authService.setUsername(this.username);
+    this.authService.getUserFiles().subscribe(
+      
       (response: any) => {
         this.files = response;
         console.log(response);

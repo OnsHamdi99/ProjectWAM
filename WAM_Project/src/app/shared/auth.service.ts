@@ -9,7 +9,7 @@ import { map, tap } from 'rxjs/operators';
 })
 export class AuthService {
   loggedIn=false;
-
+  username:string = '';
   constructor(private router: Router, private http: HttpClient) { 
     
   }
@@ -37,7 +37,10 @@ url = 'http://localhost:8010/api';
       return this.http.get<{ username: string }>(`${this.url}/auth/username`, { headers });
     }
    
-  
+    setUsername(username:string){
+      this.username=username;
+      return this.username;
+    }
 
     /* 
       Log the user out
@@ -47,10 +50,20 @@ url = 'http://localhost:8010/api';
       this.router.navigate(['/login']);
       this.loggedIn=false;
 
-    }
+    }// renvoie une promesse qui est résolue si l'utilisateur est loggué
 
-  // renvoie une promesse qui est résolue si l'utilisateur est loggué
-
+    
+  getUserFiles() { 
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `${token}`);
+    console.log(this.username + " on getuserfiles function");
+    const params = new HttpParams().set('username', this.username);
+    const url = `${this.url}/workspace`;
+    console.log(url);
+    return this.http.get(url, { headers, params }); 
+    
+    
+  } 
 }
 
 
