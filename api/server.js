@@ -194,13 +194,65 @@ app.get('/api/workspace', (req, res) => {
        res.status(500).json({ error: err.message });
      } else {
        console.log("lecture du repertoire ok");
- 
-       res.status(200).json(files);
+       res.status(200).send(JSON.stringify(files));
      }
    });
  });
- 
+ function savePluginToDB(p) {
+  let plugin = new Plugin();
+  plugin.id = p.id;
+  plugin.identifier = p.identifier;
+  plugin.name = p.name;
+  plugin.vendor = p.vendor;
+  plugin.description = p.description;
+  plugin.version = p.version;
+  plugin.apiVersion = p.apiVersion;
+  plugin.thumbnail = p.thumbnail;
+  plugin.keywords = p.keywords;
+  plugin.isInstrument = p.isInstrument;
+  plugin.website = p.website;
+  plugin.hasAudioInput = p.hasAudioInput;
+  plugin.hasAudioOutput = p.hasAudioOutput;
+  plugin.hasMidiInput = p.hasMidiInput;
+  plugin.hasMidiOutput = p.hasMidiOutput;
+  plugin.dirName = p.dirName;
+  console.log(p.dirName);
+  console.log(" Plugin to save received : ");
+  //console.log(plugin);
 
+  plugin.save((err) => {
+    if (err) {
+      console.log("Can't post plugin : ", err);
+    }
+    console.log(`${plugin.name} saved! `);
+  });
+}
+app.get('/api/workspace/share', (req, res) => {
+  const username = req.query.username;
+  const filename = req.query.file; 
+
+  const filePath = './plugins/uploads/' + username + '/' + filename;
+  console.log("filePath OF SHARING = " + filePath);
+  const descriptorPath = filePath + "/descriptor.json";
+
+  let descriptor;
+
+  if (fs.existsSync(descriptorPath)) {
+    descriptor = fs.readFileSync(descriptorPath, {
+      encoding: "utf8",
+      flag: "r",
+    });
+    // transform the string into a JSON object
+    descriptor = JSON.parse(descriptor);
+    // add the directory name to the descriptor
+    descriptor.dirName = 'uploads/'+username+'/'+filename;
+    plugins.savePluginToDB(descriptor);
+  } else {
+    console.log("descriptor.json not found");
+    res.status(500).json({ error: "descriptor.json not found" });
+  }
+  
+});
 
 
 

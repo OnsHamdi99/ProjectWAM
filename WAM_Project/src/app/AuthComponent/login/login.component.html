@@ -5,10 +5,10 @@
   <div class="spotify-form">
     <form ngForm (submit)="login(); loginForm.reset()" #loginForm class="connectForm">
       <div class="form-group">
-        <mat-form-field class="highlight">
+        <mat-form-field>
           <input matInput [(ngModel)]="email" name="email" placeholder="Your email" required>
         </mat-form-field>
-        <mat-form-field class="highlight">
+        <mat-form-field>
           <input type = "password" matInput [(ngModel)]="password" name="password" placeholder="Your password" required>
         </mat-form-field>
         <button mat-stroked-button color="primary" class="submit-btn">Connexion</button>

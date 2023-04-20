@@ -13,4 +13,7 @@
 <input type="file" (change)="onFileUpload($event)"> 
 
 <h3>My Workspace</h3>
-<button (click)="getFiles()">Get Files</button>
+<button (click)="getFiles()">Get Files</button> 
+<div *ngFor="let file of files">
+  <p>{{file}} <button (click)="SharePlugin(file)">Share</button> <button (click)="deletePlugin(file)">Delete</button></p>
+</div>

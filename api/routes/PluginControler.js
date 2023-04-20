@@ -13,6 +13,8 @@ let pluginsDirURL = "https://localhost:8080/…";
 tableau appelé plugins */
 
 function readPluginsFromDisk(dir, vendor) {
+  //dir : plugin directory
+
   console.log("getPlugins");
 
   let plugins = [];
@@ -29,7 +31,7 @@ function readPluginsFromDisk(dir, vendor) {
       const descriptorPath = filePath + "/descriptor.json";
 
       let descriptor;
-      console.log("hhhhhhhhhhhhhhhhhhhhhhhhhh");
+ 
       if (fs.existsSync(descriptorPath)) {
         descriptor = fs.readFileSync(descriptorPath, {
           encoding: "utf8",
@@ -215,4 +217,5 @@ module.exports = {
   deletePlugin,
   updatePlugin,
   postPlugin,
+  savePluginToDB,
 };

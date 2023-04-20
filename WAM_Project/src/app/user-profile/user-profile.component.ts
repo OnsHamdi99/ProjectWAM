@@ -13,7 +13,7 @@ import { AuthService } from '../shared/auth.service';
 export class UserProfileComponent implements OnInit {
   baseUrl = 'http://localhost:8010';
   constructor(private http: HttpClient, private authService:AuthService) { }
-  files:any;
+  files=Array<string>();
   username: string = '';
  
 
@@ -21,14 +21,10 @@ export class UserProfileComponent implements OnInit {
     this.authService.getUserName().subscribe(
       (    value: any) => {
          this.username = value;
+         this.authService.setUsername(value);
        console.log(this.username) }   
     ); 
   }
-  envoieForm() {
-
-  } 
-  
-
   onFileUpload(event: any) {
 
    const file: File = event.target.files[0];
@@ -57,15 +53,31 @@ export class UserProfileComponent implements OnInit {
   logout(){
     this.authService.logout();
   }
-
+returnFiles(){
+  return this.files;
+}
 getFiles(){
-  this.authService.setUsername(this.username);
+ // this.authService.setUsername(this.username);
     this.authService.getUserFiles().subscribe(
-      
+    
       (response: any) => {
-        this.files = response;
-        console.log(response);
+        if (response.length > 0) {
+        for (let i = 0; i < response.length; i++) {
+          console.log(typeof response[i]);
+          this.files.push(response[i]);
+
+        }
       }
-    );
+      }
+    ); console.log("FILES APrès fonction "+this.files)
   }
+
+  SharePlugin(file:string){
+    console.log(file);
+  this.authService.sharePlugin(file);
+}
+
+deletePlugin(file:string){
+
+}
 }

@@ -61,9 +61,19 @@ url = 'http://localhost:8010/api';
     const url = `${this.url}/workspace`;
     console.log(url);
     return this.http.get(url, { headers, params }); 
-    
-    
+
   } 
+  sharePlugin(file:string){
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `${token}`);
+    const params = new HttpParams().set('file', file).set('username', this.username);
+    console.log(file);
+    console.log(this.username);
+    this.http.get(`${this.url}/workspace/share`,{headers, params}).subscribe(
+      response => console.log('Upload successful'),
+      error => console.error(error)
+    );
+  }
 }
 
 

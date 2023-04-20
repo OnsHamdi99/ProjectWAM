@@ -77,11 +77,11 @@ input {
 
 /* Submit button style */
 .submit-btn {
+  color : black;
   border-radius: 4px;
   padding: 12px;
   border: none;
   background-color: #1DB954;
-  color: white;
   font-size: 16px;
   cursor: pointer;
 }
