@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -13,7 +13,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 
 export class UserProfileComponent implements OnInit {
   baseUrl = 'http://localhost:8010';
-  constructor(private http: HttpClient, private authService:AuthService) { }
+  constructor(private http: HttpClient, private location: Location, private authService:AuthService) { }
   files=Array<string>();
   username: string = '';
   buttonClicked = false;
@@ -27,6 +27,10 @@ export class UserProfileComponent implements OnInit {
        console.log(this.username) }   
     ); 
   }
+  reloadPage(): void {
+    window.location.reload();
+  }
+
   onFileUpload(event: any) {
 
    const file: File = event.target.files[0];
@@ -35,22 +39,22 @@ export class UserProfileComponent implements OnInit {
     formData.append('url', 'http://localhost:8010/api/file');
   
    formData.append("username",this.username);
- 
-    this.http.post(this.baseUrl + '/api/file', 
-    formData).subscribe(
-      response => console.log('Upload successful'),
-      error => console.error(error)
-    ); /*
-    let url = this.baseUrl + '/api/file';
-    fetch (url, {
-      method : 'POST',
-      body : formData
-    }).then(response => {
-      console.log(response);
-}).catch(error => {
-      console.log(error);
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', this.baseUrl + '/api/file', true);
+  xhr.onload = () => {
+    if (xhr.status === 204) {
+      console.log('Upload successful');
+    } else {
+      console.error(xhr.responseText);
     }
-); */
+  };
+  xhr.send(formData);
+  
+  // Clear the file input value to allow selecting another file
+  event.target.value = '';
+  this.files.length = 0;  
+  this.buttonClicked = false;
+  
   }
   logout(){
     this.authService.logout();
@@ -81,7 +85,10 @@ getFiles(){
 }
 
 deletePlugin(file:string){
-  this.authService.deletePlugin(file);
+  this.authService.deletePlugin(file); 
+  this.reloadPage();
 
+}
+updatePlugin(file:string){
 }
 }

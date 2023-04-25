@@ -29,10 +29,12 @@
   <div class="workspace">
     <h3 class="workspace-title">My Workspace</h3>
     <button class="workspace-button" (click)="getFiles()"  [disabled]="buttonClicked" *ngIf="!buttonClicked">Get Files</button> 
-    <div class="file-list" *ngFor="let file of files">
-      <p>{{file}} 
+    <div class="file-list">
+      <p  *ngFor="let file of files">
+        {{file}} 
         <button class="file-action-button" (click)="SharePlugin(file)">Share</button> 
         <button class="file-action-button" (click)="deletePlugin(file)">Delete</button>
+        <button class="file-action-button" (click)="updatePlugin(file)">Update</button>
       </p>
     </div>
   </div>

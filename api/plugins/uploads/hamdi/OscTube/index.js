@@ -1,25 +1,12 @@
-/* eslint-disable max-len */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable max-classes-per-file */
 import WebAudioModule from "../utils/sdk/src/WebAudioModule.js";
 import CompositeAudioNode from "../utils/sdk-parammgr/src/CompositeAudioNode.js";
 import ParamMgrFactory from "../utils/sdk-parammgr/src/ParamMgrFactory.js";
-import createElement from "./Gui/index.js";
 
-/**
- * @typedef {import('../sdk-parammgr').ParamMgrNode} ParamMgrNode
- */
+import { createElement } from "./Gui/index.js";
 
-class BigMuffNode extends CompositeAudioNode {
-  /**
-   * @type {ParamMgrNode}
-   */
+class OscTubeNode extends CompositeAudioNode {
   _wamNode;
 
-  /**
-   * @param {AudioWorkletNode} output
-   * @param {ParamMgrNode} paramMgr
-   */
   setup(output, paramMgr) {
     this.connect(output, 0, 0);
     paramMgr.addEventListener("wam-midi", (e) => output.midiMessage(e.detail.data.bytes));
@@ -32,40 +19,26 @@ class BigMuffNode extends CompositeAudioNode {
     if (this._output) this._output.destroy();
   }
 
-  /**
-   * @param {string} name
-   */
   getParamValue(name) {
     return this._wamNode.getParamValue(name);
   }
 
-  /**
-   * @param {string} name
-   * @param {number} value
-   */
   setParamValue(name, value) {
     return this._wamNode.setParamValue(name, value);
   }
 }
 
-/**
- * @param {URL} relativeURL
- * @returns {string}
- */
 const getBasetUrl = (relativeURL) => {
   const baseURL = relativeURL.href.substring(0, relativeURL.href.lastIndexOf("/"));
   return baseURL;
 };
 
-export default class BigMuffPlugin extends WebAudioModule {
-  /**
-   * Faust generated WebAudio AudioWorkletNode Constructor
-   */
+// Definition of a new plugin
+export default class OscTubePlugin extends WebAudioModule {
   _PluginFactory;
 
   _baseURL = getBasetUrl(new URL(".", import.meta.url));
-
-  _descriptorUrl = `${this._baseURL}/descriptor.json`;
+  _descriptorUrl = this._baseURL + "/descriptor.json";
 
   async _loadDescriptor() {
     const url = this._descriptorUrl;
@@ -82,15 +55,20 @@ export default class BigMuffPlugin extends WebAudioModule {
     return super.initialize(state);
   }
 
+  // The plugin redefines the async method createAudionode()
+  // that must return an <Audionode>
+  // It also listen to plugin state change event to update the audionode internal state
   async createAudioNode(initialState) {
     const factory = new this._PluginFactory(this.audioContext, this._baseURL);
     const faustNode = await factory.load();
     const paramMgrNode = await ParamMgrFactory.create(this, {
       internalParamsConfig: Object.fromEntries(faustNode.parameters),
     });
-    const node = new BigMuffNode(this.audioContext);
+    const node = new OscTubeNode(this.audioContext);
     node.setup(faustNode, paramMgrNode);
+
     if (initialState) node.setState(initialState);
+
     return node;
   }
 

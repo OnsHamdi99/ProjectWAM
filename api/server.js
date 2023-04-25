@@ -139,20 +139,29 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post('/api/file', upload.single('file'), (req, res) => {
- 
+  
   console.log("File received ! Beginning to unzip...");
   const file = req.file;
+  //print name of fike
+  console.log("file name = " + file.originalname);
  const username = req.body.username;
- console.log("username = " + username);
-  const filePath = file.path ;
+ console.log("username =" + username);
+const filePath = file.path ;
  console.log("filePath = " + filePath);
 
  if (filePath.endsWith('.zip')) {
  fs.createReadStream(filePath) // lecture du fichier zip
- .pipe(unzipper.Extract({ path: './plugins/uploads/ ' + username
+ .pipe(unzipper.Extract({ path: './plugins/uploads/'+username
 }))
  .on('close', () => {
    console.log('File deziped !');
+   fs.unlink(filePath , (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('Zip file deleted !');
+    }
+  });
 
    res.status(204).end();
  })
@@ -164,13 +173,7 @@ app.post('/api/file', upload.single('file'), (req, res) => {
 } else {
 res.status(400).json({ error: 'The file is not a zip file !' });
 }
-fs.unlink(filePath, (err) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('Zip file deleted !');
-  }
-});
+
 
 });
 
@@ -198,35 +201,7 @@ app.get('/api/workspace', (req, res) => {
      }
    });
  });
- function savePluginToDB(p) {
-  let plugin = new Plugin();
-  plugin.id = p.id;
-  plugin.identifier = p.identifier;
-  plugin.name = p.name;
-  plugin.vendor = p.vendor;
-  plugin.description = p.description;
-  plugin.version = p.version;
-  plugin.apiVersion = p.apiVersion;
-  plugin.thumbnail = p.thumbnail;
-  plugin.keywords = p.keywords;
-  plugin.isInstrument = p.isInstrument;
-  plugin.website = p.website;
-  plugin.hasAudioInput = p.hasAudioInput;
-  plugin.hasAudioOutput = p.hasAudioOutput;
-  plugin.hasMidiInput = p.hasMidiInput;
-  plugin.hasMidiOutput = p.hasMidiOutput;
-  plugin.dirName = p.dirName;
-  console.log(p.dirName);
-  console.log(" Plugin to save received : ");
-  //console.log(plugin);
 
-  plugin.save((err) => {
-    if (err) {
-      console.log("Can't post plugin : ", err);
-    }
-    console.log(`${plugin.name} saved! `);
-  });
-}
 app.get('/api/workspace/share', (req, res) => {
   const username = req.query.username;
   const filename = req.query.file; 
@@ -269,7 +244,7 @@ app.get ('/api/workspace/delete', (req, res) => {
   const filename = req.query.file;
   const filePath = './plugins/uploads/' + username + '/' + filename;
   if (fs.existsSync(filePath)) {
-  fs.unlink(filePath, (err) => {
+  fs.rm(filePath, {recursive : true}, (err) => {
     if (err) {
       console.error(err);
     } else {
