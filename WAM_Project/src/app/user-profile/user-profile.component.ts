@@ -2,6 +2,7 @@ import { HttpClient, HttpEvent, HttpRequest, HttpParams, HttpHeaders} from '@ang
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,6 +16,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private http: HttpClient, private authService:AuthService) { }
   files=Array<string>();
   username: string = '';
+  buttonClicked = false;
  
 
   ngOnInit(): void {
@@ -57,19 +59,20 @@ returnFiles(){
   return this.files;
 }
 getFiles(){
+  this.buttonClicked = true;
  // this.authService.setUsername(this.username);
     this.authService.getUserFiles().subscribe(
     
       (response: any) => {
         if (response.length > 0) {
         for (let i = 0; i < response.length; i++) {
-          console.log(typeof response[i]);
+
           this.files.push(response[i]);
 
         }
       }
       }
-    ); console.log("FILES APrès fonction "+this.files)
+    ); 
   }
 
   SharePlugin(file:string){
@@ -78,6 +81,7 @@ getFiles(){
 }
 
 deletePlugin(file:string){
+  this.authService.deletePlugin(file);
 
 }
 }

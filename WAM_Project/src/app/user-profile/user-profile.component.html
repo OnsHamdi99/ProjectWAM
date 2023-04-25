@@ -1,3 +1,9 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="user-profile.component.css">
+</head>
+<div class="spotify-header">
+  <h2 class="connectFormHeader">WAM Community</h2>
+</div>
 <!--
 <form ng-form (submit)="envoieForm();">
     Nom : <input name="nom">
@@ -10,10 +16,24 @@
     <a (click)="logout()">Logout</a>
   </button>
 
-<input type="file" (change)="onFileUpload($event)"> 
-
-<h3>My Workspace</h3>
-<button (click)="getFiles()">Get Files</button> 
-<div *ngFor="let file of files">
-  <p>{{file}} <button (click)="SharePlugin(file)">Share</button> <button (click)="deletePlugin(file)">Delete</button></p>
-</div>
+  <div class="container">
+    <h3 class="title">Upload a plugin to your worspace </h3>
+    <div class="file-upload">
+      <label for="file-upload" class="file-upload-label">
+        Choose a file
+      </label>
+      <input id="file-upload" type="file" (change)="onFileUpload($event)">
+    </div>
+  </div>
+  
+  <div class="workspace">
+    <h3 class="workspace-title">My Workspace</h3>
+    <button class="workspace-button" (click)="getFiles()"  [disabled]="buttonClicked" *ngIf="!buttonClicked">Get Files</button> 
+    <div class="file-list" *ngFor="let file of files">
+      <p>{{file}} 
+        <button class="file-action-button" (click)="SharePlugin(file)">Share</button> 
+        <button class="file-action-button" (click)="deletePlugin(file)">Delete</button>
+      </p>
+    </div>
+  </div>
+  

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { map, tap } from 'rxjs/operators';
 export class AuthService {
   loggedIn=false;
   username:string = '';
-  constructor(private router: Router, private http: HttpClient) { 
+  constructor(private router: Router, private http: HttpClient, private snackBar: MatSnackBar) { 
     
   }
   /* 
@@ -67,10 +67,33 @@ url = 'http://localhost:8010/api';
     const token = this.getToken();
     const headers = new HttpHeaders().set('Authorization', `${token}`);
     const params = new HttpParams().set('file', file).set('username', this.username);
-    console.log(file);
-    console.log(this.username);
+  
     this.http.get(`${this.url}/workspace/share`,{headers, params}).subscribe(
-      response => console.log('Upload successful'),
+      (response: any) => {
+        if (response.message) {
+          this.snackBar.open( response.message, "Close", {duration: 5000}); // display success message
+        } else {
+          console.log('Upload successful');
+          console.log(response); // display plugin data
+        }
+      },
+      (error: any) => {
+        if (error.status === 409 && error.error.message) {
+          this.snackBar.open(error.error.message + " & is shared", "Close", {duration: 5000}) ;
+          console.log(error.error.message); // display "plugin already exists" message
+        } else {
+          console.error(error);
+        }
+      }
+    );
+  }
+  deletePlugin(file:string){
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `${token}`);
+    const params = new HttpParams().set('file', file).set('username', this.username);
+
+    this.http.get(`${this.url}/workspace/delete`,{headers, params}).subscribe(
+      response => console.log('Delete successful'),
       error => console.error(error)
     );
   }

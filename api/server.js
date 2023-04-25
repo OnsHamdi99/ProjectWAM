@@ -246,13 +246,43 @@ app.get('/api/workspace/share', (req, res) => {
     descriptor = JSON.parse(descriptor);
     // add the directory name to the descriptor
     descriptor.dirName = 'uploads/'+username+'/'+filename;
-    plugins.savePluginToDB(descriptor);
+    plugins.postPlugin(descriptor, (err, plugin) => {
+      if (err) {
+        console.log("Can't post plugin : ", err);
+        if (err.message === `${descriptor.name} already exists`) {
+          res.status(409).json({ message: err.message });
+        } else {
+          res.status(500).json({ error: err.message });
+        }
+      } else {
+        console.log(`${descriptor.name} shared successfully`);
+        res.status(200).json({ message: `${descriptor.name} shared successfully` });
+      }
+    });
   } else {
     console.log("descriptor.json not found");
     res.status(500).json({ error: "descriptor.json not found" });
   }
-  
 });
+app.get ('/api/workspace/delete', (req, res) => {
+  const username = req.query.username;
+  const filename = req.query.file;
+  const filePath = './plugins/uploads/' + username + '/' + filename;
+  if (fs.existsSync(filePath)) {
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('File deleted !');
+    }
+  });
+  res.status(204).end();
+} else {
+  res.status(400).json({ error: 'The file does not exist !' });
+
+} });
+
+
 
 
 
