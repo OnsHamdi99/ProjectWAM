@@ -220,6 +220,8 @@ function putPluginsInDB(req, res) {
   res.send("All plugins saved to the database");
 }
 
+//getKeywordsFromDB 
+
 module.exports = {
   putPluginsInDB,
   getPlugins,

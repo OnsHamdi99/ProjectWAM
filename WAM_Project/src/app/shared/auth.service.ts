@@ -97,6 +97,30 @@ url = 'http://localhost:8010/api';
       error => console.error(error)
     );
   }
+
+  deleteAccount(){
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `${token}`);
+    const params = new HttpParams().set('username', this.username);
+    this.http.delete(`${this.url}/auth/delete`,{headers, params}).subscribe(
+      (response: any) => {
+        if (response.message == "User deleted successfully") { 
+          this.snackBar.open( response.message, "Close", {duration: 5000}); // display success message
+          this.logout();
+        } else {
+          (error: any) => {
+            if (error.status === 409 && error.error.message) {
+              this.snackBar.open(error.error.message , "Close", {duration: 5000}) ;
+             console.error(error)
+            } else {
+              console.error(error);
+            }
+          }
+        }
+      }
+
+    );
+  }
 }
 
 

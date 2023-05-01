@@ -34,7 +34,6 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import {LoginComponent} from './AuthComponent/login/login.component';
-import {DeleteAccountComponent} from './AuthComponent/delete-account/delete-account.component';
 import {SignUpComponent} from './AuthComponent/sign-up/sign-up.component';
 import { ReactiveFormsModule } from '@angular/forms'; 
 
@@ -42,7 +41,7 @@ const routes: Routes = [
 
   {path: 'home', component: UserProfileComponent,canActivate: [AuthGuard],},
   {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard],},
-  {path: 'delete-account', component: DeleteAccountComponent},
+
   {path: 'sign-up', component: SignUpComponent},
   {path:'login',component:LoginComponent},
   {path:'**',redirectTo:'home'}
@@ -54,7 +53,6 @@ const routes: Routes = [
     AppComponent,
     UserProfileComponent,
     LoginComponent,
-    DeleteAccountComponent,
     SignUpComponent
 
 

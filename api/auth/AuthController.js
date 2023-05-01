@@ -136,4 +136,25 @@ router.get('/all', function (req, res, next) {
   })  
 })
 
+router.delete("/delete", function(req, res, next) {
+
+  console.log("Deleting user: " + req.query.username);
+  this.username = req.query.username;
+  if (!this.username) {
+    return res.status(400).send("Bad parameters");
+  }
+  else {
+    User.findOneAndDelete({ username: this.username }, function(err, user) {
+      if(err) {
+        return res.status(500).send("Internal server error");
+      }
+      if(!user) return res.status(404).send("No user found");
+      else {
+        console.log("User deleted successfully");
+      res.status(200).send("User deleted successfully");
+      }
+  }
+  )
+}
+}) 
 module.exports = router;

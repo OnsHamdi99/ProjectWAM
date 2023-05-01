@@ -91,4 +91,9 @@ deletePlugin(file:string){
 }
 updatePlugin(file:string){
 }
+
+deleteAccount(){
+  console.log("delete account");
+  this.authService.deleteAccount();
+}
 }
