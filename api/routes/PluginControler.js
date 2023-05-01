@@ -220,7 +220,28 @@ function putPluginsInDB(req, res) {
   res.send("All plugins saved to the database");
 }
 
-//getKeywordsFromDB 
+
+function getKeywordsFromDB (req, res){
+  Plugin.distinct('keywords', function(err, keywords) {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal server error');
+    } else {
+      res.status(200).send(keywords);
+    }
+  });
+}
+  
+function getPluginsWithKeyWord (req,res) {
+ keyword =  req.query.keyword;
+  console.log("keyword received : " + keyword);
+  Plugin.find({keywords: keyword}, (err, plugins) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(plugins);
+  });
+}
 
 module.exports = {
   putPluginsInDB,
@@ -230,4 +251,6 @@ module.exports = {
   updatePlugin,
   postPlugin,
   savePluginToDB,
+  getKeywordsFromDB,
+  getPluginsWithKeyWord,
 };

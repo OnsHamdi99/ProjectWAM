@@ -69,9 +69,16 @@ app.route(prefix + '/plugins')
   .get(plugins.getPlugins)
   .post(plugins.postPlugin)
   .put(plugins.updatePlugin);
+ 
 
 app.route(prefix + '/buildDB')
   .get(plugins.putPluginsInDB);
+
+app.route(prefix+'/getKeyWords')
+.get(plugins.getKeywordsFromDB);
+
+app.route(prefix+'/getPluginsWithKeyWord')
+  .get(plugins.getPluginsWithKeyWord);
 
   /*
   app.get("/api/auth/username", (req, res) => { 
