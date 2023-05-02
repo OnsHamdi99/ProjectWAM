@@ -1,19 +1,27 @@
-<div class="spotify-header">
-    <h2 class="connectFormHeader">WAM Community</h2>
-  </div>
-  
-  <div class="spotify-form">
-    <form ngForm (submit)="login(); loginForm.reset()" #loginForm class="connectForm">
-      <div class="form-group">
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login page</title>
+	<link rel="stylesheet" type="text/css" href="login.component.css">
+</head>
+<body>
+
+
+    <form ngForm (submit)="login(); loginForm.reset()" #loginForm class="connectForm spotify-form">
+      <h2 class="connectFormHeader">Login to account</h2>
         <mat-form-field>
           <input matInput [(ngModel)]="email" name="email" placeholder="Your email" required>
         </mat-form-field>
         <mat-form-field>
           <input type = "password" matInput [(ngModel)]="password" name="password" placeholder="Your password" required>
         </mat-form-field>
-        <button mat-stroked-button color="primary" class="submit-btn">Connexion</button>
-    </div>
-    </form>
-    <a href="/sign-up">Click here to register</a>
-  </div>
+        
+        <button mat-stroked-button class="submit-btn">
+          Connexion
+        </button>
+
+        <a href="/sign-up">Click here to register</a>
+      </form>
   
+
+  </body>

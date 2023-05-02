@@ -166,33 +166,6 @@ function postPlugin(descriptor, callback) {
 }
 
 
-function deletePlugin(req, res) {
-  Plugin.findByIdAndRemove(req.params.id, (err, plugin) => {
-    if (err) {
-      res.send(err);
-    }
-    res.json({ message: `${pluginname.nom} deleted` });
-  });
-}
-
-function updatePlugin(req, res) {
-  console.log("Update on plugin : ");
-  console.log(req.body);
-  Pluggin.findByIdAndUpdate(
-    res.body._id,
-    req.body,
-    { new: true },
-    (err, plugin) => {
-      if (err) {
-        console.log(err);
-        res.send(err);
-      } else {
-        res.json({ message: "${plugin.name} updated" });
-      }
-    }
-  );
-}
-
 function putPluginsInDB(req, res) {
   console.log("here");
   // On parcours le dossier pluginsDir et on récupère les sous-dossiers

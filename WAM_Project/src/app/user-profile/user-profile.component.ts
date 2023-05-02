@@ -56,6 +56,7 @@ export class UserProfileComponent implements OnInit {
   this.buttonClicked = false;
   
   }
+
   logout(){
     this.authService.logout();
   }
@@ -89,11 +90,18 @@ deletePlugin(file:string){
   this.reloadPage();
 
 }
-updatePlugin(file:string){
-}
+
 
 deleteAccount(){
   console.log("delete account");
   this.authService.deleteAccount();
 }
+
+
+updatePlugin(file:string, event:any) {
+  this.authService.updatePlugin(file,event);
+  event.target.value = '';
+  this.reloadPage();
+}
+
 }

@@ -149,7 +149,7 @@ app.post('/api/file', upload.single('file'), (req, res) => {
   
   console.log("File received ! Beginning to unzip...");
   const file = req.file;
-  //print name of fike
+  //print name of fiLe
   console.log("file name = " + file.originalname);
  const username = req.body.username;
  console.log("username =" + username);
@@ -264,9 +264,40 @@ app.get ('/api/workspace/delete', (req, res) => {
 
 } });
 
+app.post('api/file/update', upload.single('file'), (req, res) => {
+  const username = req.body.username;
+  const file = req.file;
+  const filename = req.body.filename ;
+  const filePath = file.path ; 
 
-
-
+  if (filePath.endsWith('.zip')) {
+    fs.createReadStream(filePath) // lecture du fichier zip
+    .pipe(unzipper.Extract({ path: './plugins/uploads/'+username
+    }))
+    .on('close', () => {
+      console.log('File deziped !');
+      fs.unlink(filePath , (err) => {
+       if (err) {
+         console.error(err);
+       } else {
+         console.log('Zip file deleted !');
+       }
+     });
+   
+      res.status(204).end();
+    }
+    )
+    .on('error', (err) => {
+      console.log('Error while deziping : ' + err.message);
+      res.status(500).json({ error: err.message });
+    }
+    );
+    } else {
+    res.status(400).json({ error: 'The file is not a zip file !' });
+    }
+    //check if plugin is in DB, update discriptor if it is 
+   
+  });
 
 
 //// fin gestion des workspaces

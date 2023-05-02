@@ -26,11 +26,11 @@ export class LoginComponent implements OnInit {
         const token = (response as {token: string}).token;
         localStorage.setItem('jwt_token', token);
         this.router.navigate(['/home']);
-        this.snackBar.open("Bienvenue", "Fermer", {duration: 5000});
+        this.snackBar.open("Welcome", "Close", {duration: 5000});
         this.authService.loggedIn = true;
       }, 
       (error) => {
-     this.snackBar.open("Identifiants faux", "Fermer", {duration: 5000}); } 
+     this.snackBar.open("Wrong identifiers", "Close", {duration: 5000}); } 
    )
   }
   

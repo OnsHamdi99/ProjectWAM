@@ -26,7 +26,7 @@ export class SignUpComponent implements OnInit {
       this.http.post(this.url + '/register', body).subscribe(
         response => { 
           this.router.navigate(['/home']);
-          this.snackBar.open("Welcome", "Cole", {duration: 5000});
+          this.snackBar.open("Welcome, please sign in now", "Close", {duration: 5000});
      
         }, 
   

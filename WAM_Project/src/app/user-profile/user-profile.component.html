@@ -1,9 +1,4 @@
-<head>
-  <link rel="stylesheet" type="text/css" href="user-profile.component.css">
-</head>
-<div class="spotify-header">
-  <h2 class="connectFormHeader">WAM Community</h2>
-</div>
+
 <!--
 <form ng-form (submit)="envoieForm();">
     Nom : <input name="nom">
@@ -20,7 +15,7 @@
   </button>
 
   <div class="container">
-    <h3 class="title">Upload a plugin to your worspace </h3>
+    <h3 class="title">Upload a plugin to your workspace </h3>
     <div class="file-upload">
       <label for="file-upload" class="file-upload-label">
         Choose a file
@@ -37,7 +32,10 @@
         {{file}} 
         <button class="file-action-button" (click)="SharePlugin(file)">Share</button> 
         <button class="file-action-button" (click)="deletePlugin(file)">Delete</button>
-        <button class="file-action-button" (click)="updatePlugin(file)">Update</button>
+        <label for="file-upload" class="file-action-button">
+          Update
+        </label>
+        <input id="file-upload" type="file" (change)="updatePlugin(file, $event)">
       </p>
     </div>
   </div>

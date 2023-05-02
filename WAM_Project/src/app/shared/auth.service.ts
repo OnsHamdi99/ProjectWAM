@@ -121,6 +121,24 @@ url = 'http://localhost:8010/api';
 
     );
   }
+
+  updatePlugin(filename:string,event:any){
+    const file: File = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file,filename);
+   formData.append("username",this.username);
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', this.url + '/api/file/update', true);
+  xhr.onload = () => {
+    if (xhr.status === 204) {
+      console.log('Upload successful');
+    } else {
+      console.error(xhr.responseText);
+    }
+  };
+  xhr.send(formData);
+
+  }
 }
 
 
