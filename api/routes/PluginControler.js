@@ -220,8 +220,7 @@ module.exports = {
   putPluginsInDB,
   getPlugins,
   getPlugin,
-  deletePlugin,
-  updatePlugin,
+
   postPlugin,
   savePluginToDB,
   getKeywordsFromDB,

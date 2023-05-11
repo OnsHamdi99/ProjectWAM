@@ -67,8 +67,7 @@ const prefix = '/api';
 
 app.route(prefix + '/plugins')
   .get(plugins.getPlugins)
-  .post(plugins.postPlugin)
-  .put(plugins.updatePlugin);
+  .post(plugins.postPlugin);
  
 
 app.route(prefix + '/buildDB')
